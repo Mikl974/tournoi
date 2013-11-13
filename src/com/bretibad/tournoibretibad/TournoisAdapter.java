@@ -46,7 +46,6 @@ public class TournoisAdapter extends BaseAdapter {
 	@Override
 	public View getView(int position, View convertView, ViewGroup parent) {
 		final ViewHolder holder;
-		
 
 		if (convertView == null) {
 			holder = new ViewHolder();
@@ -66,14 +65,16 @@ public class TournoisAdapter extends BaseAdapter {
 
 			@Override
 			public void onClick(View v) {
-				ArrayList<Joueur> joueursInscrits = TournoiService.getInstance().getJoueursInscrits(tournoi);
-				Intent i=new Intent(v.getContext(),JoueursInscritsActivity.class);
+				ArrayList<Joueur> joueursInscrits = TournoiService.getInstance(
+						v.getContext()).getJoueursInscrits(tournoi);
+				Intent i = new Intent(v.getContext(),
+						JoueursInscritsActivity.class);
 				i.putParcelableArrayListExtra("joueurs", joueursInscrits);
 				i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 				v.getContext().startActivity(i);
 			}
 		});
-		
+
 		int listItemBackgroundPosition = position % colors.length;
 		convertView.setBackgroundResource(colors[listItemBackgroundPosition]);
 

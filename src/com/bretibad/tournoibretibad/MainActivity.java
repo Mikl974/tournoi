@@ -24,7 +24,7 @@ public class MainActivity extends Activity {
 				.permitAll().build();
 		StrictMode.setThreadPolicy(policy);
 
-		List<Tournoi> tournois = TournoiService.getInstance().getTournois();
+		List<Tournoi> tournois = TournoiService.getInstance(getApplicationContext()).getTournois();
 
 		tournoisListView = (ListView) findViewById(R.id.tournois_list);
 		tournoisListView.setAdapter(new TournoisAdapter(

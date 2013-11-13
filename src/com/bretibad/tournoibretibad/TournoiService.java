@@ -2,6 +2,7 @@ package com.bretibad.tournoibretibad;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Properties;
 
 import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
@@ -12,22 +13,32 @@ import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.util.EntityUtils;
 
+import android.content.Context;
 import android.util.Log;
 
 import com.bretibad.tournoibretibad.model.Joueur;
 import com.bretibad.tournoibretibad.model.Tournoi;
+import com.bretibad.tournoibretibad.utils.AssetsPropertyReader;
 
 public class TournoiService {
 
 	public static TournoiService instance = null;
-	private String baseUrl = "http://bretibad.pacmik.com/";
+	private String baseUrl = "";
+	Properties config;
 
 	DefaultHttpClient client = new DefaultHttpClient();
+	AssetsPropertyReader assetsPropertyReader;
+
+	public TournoiService(Context context) {
+		assetsPropertyReader = new AssetsPropertyReader(context);
+		config = assetsPropertyReader.getProperties("config.properties");
+		baseUrl = config.getProperty("baseUrl");
+	}
 
 	public List<Tournoi> getTournois() {
 		List<Tournoi> results = new ArrayList<Tournoi>();
 		try {
-			HttpGet get = new HttpGet(baseUrl + "rest/listTournoi");
+			HttpGet get = new HttpGet(baseUrl + config.getProperty("listTournoi"));
 			HttpResponse resp = client.execute(get);
 			String content = EntityUtils.toString(resp.getEntity());
 
@@ -41,7 +52,8 @@ public class TournoiService {
 	public ArrayList<Joueur> getJoueursInscrits(String tournoi) {
 		ArrayList<Joueur> results = new ArrayList<Joueur>();
 		try {
-			HttpGet get = new HttpGet(baseUrl + "rest/listInscrits/" + tournoi);
+			HttpGet get = new HttpGet(baseUrl
+					+ config.getProperty("listInscrits") + tournoi);
 			HttpResponse resp = client.execute(get);
 			String content = EntityUtils.toString(resp.getEntity());
 
@@ -54,7 +66,8 @@ public class TournoiService {
 
 	public void inscrireJoueurs(String tournoi, Joueur joueur) {
 		try {
-			HttpPost post = new HttpPost(baseUrl + "rest/inscrireJoueur");
+			HttpPost post = new HttpPost(baseUrl
+					+ config.getProperty("inscrireJoueur"));
 
 			List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(2);
 			nameValuePairs.add(new BasicNameValuePair("licence", joueur
@@ -68,9 +81,9 @@ public class TournoiService {
 		}
 	}
 
-	public static TournoiService getInstance() {
+	public static TournoiService getInstance(Context context) {
 		if (instance == null) {
-			instance = new TournoiService();
+			instance = new TournoiService(context);
 		}
 		return instance;
 	}
