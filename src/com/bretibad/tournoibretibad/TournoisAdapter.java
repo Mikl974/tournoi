@@ -70,13 +70,14 @@ public class TournoisAdapter extends BaseAdapter {
 				Intent i = new Intent(v.getContext(),
 						JoueursInscritsActivity.class);
 				i.putParcelableArrayListExtra("joueurs", joueursInscrits);
+				i.putExtra("tournoi", tournoi);
 				i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 				v.getContext().startActivity(i);
 			}
 		});
 
-		int listItemBackgroundPosition = position % colors.length;
-		convertView.setBackgroundResource(colors[listItemBackgroundPosition]);
+//		int listItemBackgroundPosition = position % colors.length;
+//		convertView.setBackgroundResource(colors[listItemBackgroundPosition]);
 
 		return convertView;
 	}

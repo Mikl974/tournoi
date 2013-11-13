@@ -1,0 +1,15 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android" >
+
+    <item
+        android:id="@+id/inscrire_joueur"
+        android:orderInCategory="1"
+        android:showAsAction="ifRoom"
+        android:title="Payer"/>
+    
+    <item
+        android:id="@+id/joueurImpayer"
+        android:orderInCategory="2"
+        android:showAsAction="ifRoom"
+        android:title="Impayer"/>
+
+</menu>

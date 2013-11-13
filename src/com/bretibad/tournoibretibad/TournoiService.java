@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
 
+import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
@@ -38,7 +39,8 @@ public class TournoiService {
 	public List<Tournoi> getTournois() {
 		List<Tournoi> results = new ArrayList<Tournoi>();
 		try {
-			HttpGet get = new HttpGet(baseUrl + config.getProperty("listTournoi"));
+			HttpGet get = new HttpGet(baseUrl
+					+ config.getProperty("listTournoi"));
 			HttpResponse resp = client.execute(get);
 			String content = EntityUtils.toString(resp.getEntity());
 
@@ -64,21 +66,54 @@ public class TournoiService {
 		return results;
 	}
 
-	public void inscrireJoueurs(String tournoi, Joueur joueur) {
+	public void inscrireJoueurs(String tournoi, List<Joueur> joueurs) {
 		try {
 			HttpPost post = new HttpPost(baseUrl
 					+ config.getProperty("inscrireJoueur"));
+			post.setEntity(new UrlEncodedFormEntity(getPostParam(tournoi, joueurs)));
 
-			List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(2);
-			nameValuePairs.add(new BasicNameValuePair("licence", joueur
-					.getLicence()));
-			nameValuePairs.add(new BasicNameValuePair("tournoi", tournoi));
-			post.setEntity(new UrlEncodedFormEntity(nameValuePairs));
-
-			client.execute(post);
+			HttpResponse response = client.execute(post);
+			HttpEntity entity = response.getEntity();
+			String string = EntityUtils.toString(entity);
+			string.length();
 		} catch (Exception e) {
 			Log.e("Error", "Error" + e.getMessage());
 		}
+	}
+
+	
+	public void joueurImpayer(String tournoi, List<Joueur> joueurs) {
+		try {
+			HttpPost post = new HttpPost(baseUrl
+					+ config.getProperty("joueurImpayer"));
+			post.setEntity(new UrlEncodedFormEntity(getPostParam(tournoi, joueurs)));
+
+			HttpResponse response = client.execute(post);
+			HttpEntity entity = response.getEntity();
+			String string = EntityUtils.toString(entity);
+			string.length();
+		} catch (Exception e) {
+			Log.e("Error", "Error" + e.getMessage());
+		}
+		
+	}
+	private List<NameValuePair> getPostParam(String tournoi,
+			List<Joueur> joueurs) {
+		StringBuilder licenceList = new StringBuilder();
+		int i = 0;
+		for (Joueur j : joueurs) {
+			licenceList.append("\"" + j.getLicence() + "\"");
+			if (i < joueurs.size() - 1) {
+				licenceList.append(",");
+			}
+			i++;
+		}
+
+		List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(2);
+		nameValuePairs.add(new BasicNameValuePair("licence", licenceList
+				.toString()));
+		nameValuePairs.add(new BasicNameValuePair("tournoi", tournoi));
+		return nameValuePairs;
 	}
 
 	public static TournoiService getInstance(Context context) {

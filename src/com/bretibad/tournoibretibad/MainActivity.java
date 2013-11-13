@@ -24,18 +24,12 @@ public class MainActivity extends Activity {
 				.permitAll().build();
 		StrictMode.setThreadPolicy(policy);
 
-		List<Tournoi> tournois = TournoiService.getInstance(getApplicationContext()).getTournois();
+		List<Tournoi> tournois = TournoiService.getInstance(
+				getApplicationContext()).getTournois();
 
 		tournoisListView = (ListView) findViewById(R.id.tournois_list);
 		tournoisListView.setAdapter(new TournoisAdapter(
 				getApplicationContext(), tournois));
-	}
-
-	@Override
-	public boolean onCreateOptionsMenu(Menu menu) {
-		// Inflate the menu; this adds items to the action bar if it is present.
-		getMenuInflater().inflate(R.menu.main, menu);
-		return true;
 	}
 
 }

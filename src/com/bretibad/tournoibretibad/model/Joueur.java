@@ -47,7 +47,7 @@ public class Joueur implements Parcelable {
 		this.licence = licence;
 	}
 
-	public int isPaye() {
+	public int getPaye() {
 		return paye;
 	}
 
