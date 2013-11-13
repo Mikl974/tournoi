@@ -66,10 +66,10 @@ public class TournoiService {
 		return results;
 	}
 
-	public void inscrireJoueurs(String tournoi, List<Joueur> joueurs) {
+	public void joueurPayer(String tournoi, List<Joueur> joueurs) {
 		try {
 			HttpPost post = new HttpPost(baseUrl
-					+ config.getProperty("inscrireJoueur"));
+					+ config.getProperty("joueurPayer"));
 			post.setEntity(new UrlEncodedFormEntity(getPostParam(tournoi, joueurs)));
 
 			HttpResponse response = client.execute(post);

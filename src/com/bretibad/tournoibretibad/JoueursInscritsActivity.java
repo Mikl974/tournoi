@@ -103,7 +103,7 @@ public class JoueursInscritsActivity extends Activity {
 			switch (item.getItemId()) {
 			case R.id.inscrire_joueur:
 				TournoiService.getInstance(getApplicationContext())
-						.inscrireJoueurs(joueurAdapter.getTournoi(), joueurs);
+						.joueurPayer(joueurAdapter.getTournoi(), joueurs);
 				mode.finish(); // Action picked, so close the CAB
 
 				refreshListJoueur();
