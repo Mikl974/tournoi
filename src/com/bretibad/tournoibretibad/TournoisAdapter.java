@@ -21,7 +21,6 @@ public class TournoisAdapter extends BaseAdapter {
 
 	List<Tournoi> dtos;
 	LayoutInflater inflater;
-	private int[] colors = new int[] { R.color.blue, R.color.green };
 
 	public TournoisAdapter(Context context, List<Tournoi> dtos) {
 		inflater = LayoutInflater.from(context);
