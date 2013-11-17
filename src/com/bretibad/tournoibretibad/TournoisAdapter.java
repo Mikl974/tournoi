@@ -10,6 +10,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
 import android.widget.BaseAdapter;
 import android.widget.TextView;
 
@@ -17,12 +18,13 @@ import com.bretibad.tournoibretibad.R;
 import com.bretibad.tournoibretibad.model.Joueur;
 import com.bretibad.tournoibretibad.model.Tournoi;
 
-public class TournoisAdapter extends BaseAdapter {
+public class TournoisAdapter extends ArrayAdapter<Tournoi> {
 
 	List<Tournoi> dtos;
 	LayoutInflater inflater;
 
-	public TournoisAdapter(Context context, List<Tournoi> dtos) {
+	public TournoisAdapter(Context context, int resId, List<Tournoi> dtos) {
+		super(context, resId, dtos);
 		inflater = LayoutInflater.from(context);
 		this.dtos = dtos;
 	}
@@ -33,7 +35,7 @@ public class TournoisAdapter extends BaseAdapter {
 	}
 
 	@Override
-	public Object getItem(int position) {
+	public Tournoi getItem(int position) {
 		return dtos.get(position);
 	}
 
@@ -51,6 +53,8 @@ public class TournoisAdapter extends BaseAdapter {
 			convertView = inflater.inflate(R.layout.tournoi_item, null);
 
 			holder.nom = (TextView) convertView.findViewById(R.id.tournoi_nom);
+			holder.tarif = (TextView) convertView
+					.findViewById(R.id.tournoi_tarif);
 
 			convertView.setTag(holder);
 		} else {
@@ -58,9 +62,11 @@ public class TournoisAdapter extends BaseAdapter {
 		}
 
 		final String tournoi = dtos.get(position).getNom();
+		final String tarif = dtos.get(position).getTarif();
 		holder.nom.setText(Html.fromHtml(tournoi));
+		holder.tarif.setText(Html.fromHtml(tarif));
 
-		holder.nom.setOnClickListener(new OnClickListener() {
+		convertView.setOnClickListener(new OnClickListener() {
 
 			@Override
 			public void onClick(View v) {
@@ -75,13 +81,14 @@ public class TournoisAdapter extends BaseAdapter {
 			}
 		});
 
-//		int listItemBackgroundPosition = position % colors.length;
-//		convertView.setBackgroundResource(colors[listItemBackgroundPosition]);
+		// int listItemBackgroundPosition = position % colors.length;
+		// convertView.setBackgroundResource(colors[listItemBackgroundPosition]);
 
 		return convertView;
 	}
 
 	private class ViewHolder {
 		TextView nom;
+		TextView tarif;
 	}
 }

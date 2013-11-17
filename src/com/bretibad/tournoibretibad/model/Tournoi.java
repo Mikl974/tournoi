@@ -10,6 +10,33 @@ import org.json.JSONObject;
 public class Tournoi {
 
 	private String nom;
+	private String date;
+	private String dateLimite;
+	private String tarif;
+
+	public String getDate() {
+		return date;
+	}
+
+	public void setDate(String date) {
+		this.date = date;
+	}
+
+	public String getDateLimite() {
+		return dateLimite;
+	}
+
+	public void setDateLimite(String dateLimite) {
+		this.dateLimite = dateLimite;
+	}
+
+	public String getTarif() {
+		return tarif;
+	}
+
+	public void setTarif(String tarif) {
+		this.tarif = tarif;
+	}
 
 	public Tournoi() {
 	}
@@ -26,6 +53,9 @@ public class Tournoi {
 		try {
 			Tournoi t = new Tournoi();
 			t.setNom(jsonTournoi.getString("nom"));
+			t.setTarif(jsonTournoi.getString("tarif1") + "€ / "
+					+ jsonTournoi.getString("tarif2") + "€ / "
+					+ jsonTournoi.getString("tarif3") + "€");
 			return t;
 		} catch (JSONException e) {
 			System.err.println(e.getMessage());

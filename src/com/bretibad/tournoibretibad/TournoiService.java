@@ -70,7 +70,8 @@ public class TournoiService {
 		try {
 			HttpPost post = new HttpPost(baseUrl
 					+ config.getProperty("joueurPayer"));
-			post.setEntity(new UrlEncodedFormEntity(getPostParam(tournoi, joueurs)));
+			post.setEntity(new UrlEncodedFormEntity(getPostParam(tournoi,
+					joueurs)));
 
 			HttpResponse response = client.execute(post);
 			HttpEntity entity = response.getEntity();
@@ -81,12 +82,12 @@ public class TournoiService {
 		}
 	}
 
-	
 	public void joueurImpayer(String tournoi, List<Joueur> joueurs) {
 		try {
 			HttpPost post = new HttpPost(baseUrl
 					+ config.getProperty("joueurImpayer"));
-			post.setEntity(new UrlEncodedFormEntity(getPostParam(tournoi, joueurs)));
+			post.setEntity(new UrlEncodedFormEntity(getPostParam(tournoi,
+					joueurs)));
 
 			HttpResponse response = client.execute(post);
 			HttpEntity entity = response.getEntity();
@@ -95,8 +96,9 @@ public class TournoiService {
 		} catch (Exception e) {
 			Log.e("Error", "Error" + e.getMessage());
 		}
-		
+
 	}
+
 	private List<NameValuePair> getPostParam(String tournoi,
 			List<Joueur> joueurs) {
 		StringBuilder licenceList = new StringBuilder();
