@@ -4,15 +4,24 @@
     android:layout_height="match_parent"
     android:layout_marginTop="10dp"
     tools:context=".MainActivity" >
-    
+
     <ListView
-        android:id="@+id/joueurs_list"
+        android:id="@android:id/list"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_gravity="start"
-        android:divider="@android:color/holo_blue_dark"
-        android:dividerHeight="1dp"
         android:choiceMode="multipleChoice"
-        android:clickable="true"  />
+        android:clickable="true"
+        android:divider="@android:color/holo_blue_dark"
+        android:dividerHeight="1dp" />
+    
+    <TextView 
+        android:id="@id/android:empty" 
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent" 
+        android:gravity="center_vertical|center_horizontal"
+        android:textStyle="bold"
+        android:text="@string/pasDinscrits" 
+        />
 
 </RelativeLayout>

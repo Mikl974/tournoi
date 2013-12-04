@@ -1,9 +1,8 @@
-package com.bretibad.tournoibretibad;
+package com.bretibad.tournoibretibad.adpter;
 
 import java.util.List;
 
 import android.content.Context;
-import android.graphics.Color;
 import android.util.SparseBooleanArray;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -12,6 +11,7 @@ import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.bretibad.tournoibretibad.R;
 import com.bretibad.tournoibretibad.model.Joueur;
 
 public class JoueurAdapter extends ArrayAdapter<Joueur> {
@@ -19,6 +19,8 @@ public class JoueurAdapter extends ArrayAdapter<Joueur> {
 	List<Joueur> dtos;
 	LayoutInflater inflater;
 	private SparseBooleanArray mSelectedItemsIds;
+
+	// TODO: remove this
 	String tournoi;
 
 	public String getTournoi() {
@@ -29,8 +31,7 @@ public class JoueurAdapter extends ArrayAdapter<Joueur> {
 		this.tournoi = tournoi;
 	}
 
-	public JoueurAdapter(Context context, int resId, List<Joueur> dtos,
-			String tournoi) {
+	public JoueurAdapter(Context context, int resId, List<Joueur> dtos, String tournoi) {
 		super(context, resId, dtos);
 		inflater = LayoutInflater.from(context);
 		this.dtos = dtos;
@@ -64,9 +65,19 @@ public class JoueurAdapter extends ArrayAdapter<Joueur> {
 		return mSelectedItemsIds;
 	}
 
+	public int[] getSelectedIdsArray() {
+		int[] ids = new int[mSelectedItemsIds.size()];
+		for (int i = 0; i < mSelectedItemsIds.size(); i++) {
+			if (mSelectedItemsIds.get(i)) {
+				ids[i] = i;
+			}
+		}
+		return ids;
+	}
+
 	@Override
 	public boolean isEnabled(int position) {
-		return true;//dtos.get(position).getPaye() == 0;
+		return true;// dtos.get(position).getPaye() == 0;
 	}
 
 	@Override
@@ -92,37 +103,22 @@ public class JoueurAdapter extends ArrayAdapter<Joueur> {
 			holder = new ViewHolder();
 			convertView = inflater.inflate(R.layout.joueur_item, null);
 
-			holder.fullName = (TextView) convertView
-					.findViewById(R.id.joueur_fullName);
-			holder.licence = (TextView) convertView
-					.findViewById(R.id.joueur_license);
-			holder.payeImage = (ImageView) convertView
-					.findViewById(R.id.joueur_paye);
+			holder.fullName = (TextView) convertView.findViewById(R.id.joueur_fullName);
+			holder.licence = (TextView) convertView.findViewById(R.id.joueur_license);
+			holder.payeImage = (ImageView) convertView.findViewById(R.id.joueur_paye);
 
 			convertView.setTag(holder);
 		} else {
 			holder = (ViewHolder) convertView.getTag();
 		}
 
-		holder.fullName.setText(dtos.get(position).getNom() + " "
-				+ dtos.get(position).getPrenom());
+		holder.fullName.setText(dtos.get(position).getNom() + " " + dtos.get(position).getPrenom());
 		holder.licence.setText(dtos.get(position).getLicence());
 		if (dtos.get(position).getPaye() != 0) {
 			holder.payeImage.setVisibility(View.VISIBLE);
-			holder.payeImage.setImageResource(R.drawable.dollar);
+			holder.payeImage.setImageResource(R.drawable.euro);
 		} else {
 			holder.payeImage.setVisibility(View.INVISIBLE);
-		}
-
-		if (mSelectedItemsIds.get(position)) {
-			convertView.setBackgroundColor(convertView.getResources().getColor(
-					android.R.color.holo_blue_light));
-			holder.fullName.setTextColor(convertView.getResources().getColor(
-					android.R.color.white));
-		} else {
-			convertView.setBackgroundColor(Color.TRANSPARENT);
-			holder.fullName.setTextColor(convertView.getResources().getColor(
-					android.R.color.holo_blue_light));
 		}
 
 		return convertView;

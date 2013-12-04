@@ -1,21 +1,15 @@
-package com.bretibad.tournoibretibad;
+package com.bretibad.tournoibretibad.adpter;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import android.content.Context;
-import android.content.Intent;
-import android.text.Html;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
-import android.widget.BaseAdapter;
 import android.widget.TextView;
 
 import com.bretibad.tournoibretibad.R;
-import com.bretibad.tournoibretibad.model.Joueur;
 import com.bretibad.tournoibretibad.model.Tournoi;
 
 public class TournoisAdapter extends ArrayAdapter<Tournoi> {
@@ -53,36 +47,24 @@ public class TournoisAdapter extends ArrayAdapter<Tournoi> {
 			convertView = inflater.inflate(R.layout.tournoi_item, null);
 
 			holder.nom = (TextView) convertView.findViewById(R.id.tournoi_nom);
-			holder.tarif = (TextView) convertView
-					.findViewById(R.id.tournoi_tarif);
+			holder.tarif = (TextView) convertView.findViewById(R.id.tournoi_tarif);
+			holder.nbPaye = (TextView) convertView.findViewById(R.id.tournoi_nb_paye);
+			holder.nbInscrits = (TextView) convertView.findViewById(R.id.tournoi_nb_inscrits);
 
 			convertView.setTag(holder);
 		} else {
 			holder = (ViewHolder) convertView.getTag();
 		}
 
-		final String tournoi = dtos.get(position).getNom();
-		final String tarif = dtos.get(position).getTarif();
-		holder.nom.setText(Html.fromHtml(tournoi));
-		holder.tarif.setText(Html.fromHtml(tarif));
-
-		convertView.setOnClickListener(new OnClickListener() {
-
-			@Override
-			public void onClick(View v) {
-				ArrayList<Joueur> joueursInscrits = TournoiService.getInstance(
-						v.getContext()).getJoueursInscrits(tournoi);
-				Intent i = new Intent(v.getContext(),
-						JoueursInscritsActivity.class);
-				i.putParcelableArrayListExtra("joueurs", joueursInscrits);
-				i.putExtra("tournoi", tournoi);
-				i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-				v.getContext().startActivity(i);
-			}
-		});
-
-		// int listItemBackgroundPosition = position % colors.length;
-		// convertView.setBackgroundResource(colors[listItemBackgroundPosition]);
+		Tournoi tournoi = dtos.get(position);
+		final String nomTournoi = tournoi.getNom();
+		StringBuilder sb = new StringBuilder();
+		sb.append(tournoi.getTarif1()).append("/").append(tournoi.getTarif2()).append("/").append(tournoi.getTarif3());
+		final String tarif = sb.toString();
+		holder.nom.setText(nomTournoi);
+		holder.tarif.setText(tarif);
+		holder.nbInscrits.setText(String.valueOf(tournoi.getNbInscrits()));
+		holder.nbPaye.setText(String.valueOf(tournoi.getNbPaye()));
 
 		return convertView;
 	}
@@ -90,5 +72,7 @@ public class TournoisAdapter extends ArrayAdapter<Tournoi> {
 	private class ViewHolder {
 		TextView nom;
 		TextView tarif;
+		TextView nbPaye;
+		TextView nbInscrits;
 	}
 }

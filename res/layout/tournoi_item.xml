@@ -14,7 +14,7 @@
         android:paddingLeft="10dp"
         android:paddingRight="10dp"
         android:textColor="@color/tournoi_selector_text"
-        android:textSize="@dimen/tournoiListTextSize"
+        android:textSize="@dimen/tournoiNomTextSize"
         android:textStyle="normal" />
 
     <GridLayout
@@ -27,16 +27,56 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:focusable="false"
+            android:paddingRight="5dp"
             android:text="@string/tarifs"
-            android:textColor="#A2A2A2"
-            android:textSize="12sp" />
+            android:textColor="@color/darkGrey"
+            android:textSize="12sp"
+            android:textStyle="bold" />
 
         <TextView
             android:id="@+id/tournoi_tarif"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:focusable="false"
-            android:textColor="#A2A2A2"
+            android:textColor="@color/lightGrey"
+            android:textSize="12sp" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:focusable="false"
+            android:paddingLeft="20dp"
+            android:paddingRight="5dp"
+            android:text="@string/nbInscrits"
+            android:textColor="@color/darkGrey"
+            android:textSize="12sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/tournoi_nb_inscrits"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:focusable="false"
+            android:textColor="@color/lightGrey"
+            android:textSize="12sp" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:focusable="false"
+            android:paddingLeft="20dp"
+            android:paddingRight="5dp"
+            android:text="@string/nbPaye"
+            android:textColor="@color/darkGrey"
+            android:textSize="12sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/tournoi_nb_paye"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:focusable="false"
+            android:textColor="@color/lightGrey"
             android:textSize="12sp" />
     </GridLayout>
 

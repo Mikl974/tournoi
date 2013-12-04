@@ -3,5 +3,10 @@
 
     <color name="windowBackground">#EEEEEE</color>
     <color name="lineSeparator">#CBCBCB</color>
+    <color name="lightBlue">#CFE9F3</color>
+    <color name="darkGrey">#919191</color>
+    <color name="lightGrey">#A2A2A2</color>
+    <color name="darkerGrey">#58585B</color>
+    <color name="pressRow">#b2b2b2</color>
 
 </resources>
