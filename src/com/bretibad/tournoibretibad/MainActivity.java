@@ -1,81 +1,109 @@
 package com.bretibad.tournoibretibad;
 
-import java.util.List;
-
-import uk.co.senab.actionbarpulltorefresh.library.ActionBarPullToRefresh;
-import uk.co.senab.actionbarpulltorefresh.library.PullToRefreshLayout;
-import uk.co.senab.actionbarpulltorefresh.library.listeners.OnRefreshListener;
-import android.app.Activity;
-import android.os.AsyncTask;
+import android.content.Intent;
+import android.content.res.Configuration;
 import android.os.Bundle;
-import android.os.StrictMode;
-import android.view.View;
-import android.widget.ListView;
+import android.support.v4.app.FragmentActivity;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
+import android.view.Window;
 
+import com.bretibad.tournoibretibad.fragment.JoueursResponderFragment;
+import com.bretibad.tournoibretibad.fragment.TournoisResponderFragment;
 import com.bretibad.tournoibretibad.model.Tournoi;
+import com.bretibad.tournoibretibad.utils.Config;
+import com.parse.Parse;
+import com.parse.PushService;
 
-public class MainActivity extends Activity implements OnRefreshListener {
+public class MainActivity extends FragmentActivity {
 
-	ListView tournoisListView;
-	TournoisAdapter tournoisAdapter;
-	PullToRefreshLayout mPullToRefreshLayout;
+	TournoisResponderFragment tournoiListFragment;
 
 	@Override
-	protected void onCreate(Bundle savedInstanceState) {
+	public void onCreate(Bundle savedInstanceState) {
+		initParse();
+
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.activity_main);
+		requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
+		setProgressBarIndeterminateVisibility(false);
 
-		StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder()
-				.permitAll().build();
-		StrictMode.setThreadPolicy(policy);
+		setContentView(R.layout.activity_rest_service);
 
-		List<Tournoi> tournois = TournoiService.getInstance(
-				getApplicationContext()).getTournois();
+		FragmentManager fm = getSupportFragmentManager();
+		FragmentTransaction ft = fm.beginTransaction();
 
-		tournoisListView = (ListView) findViewById(R.id.tournois_list);
-		tournoisAdapter = new TournoisAdapter(getApplicationContext(),
-				R.id.tournois_list, tournois);
-		tournoisListView.setAdapter(tournoisAdapter);
+		tournoiListFragment = (TournoisResponderFragment) fm.findFragmentByTag("RESTResponder");
+		if (tournoiListFragment == null) {
+			tournoiListFragment = new TournoisResponderFragment();
 
-		// Now find the PullToRefreshLayout to setup
-		mPullToRefreshLayout = (PullToRefreshLayout) findViewById(R.id.ptr_layout);
+			ft.add(R.id.fragment_content, tournoiListFragment, "RESTResponder");
+		}
 
-		// Now setup the PullToRefreshLayout
-		ActionBarPullToRefresh.from(this)
-		// Mark All Children as pullable
-				.allChildrenArePullable()
-				// Set the OnRefreshListener
-				.listener(this)
-				// Finally commit the setup to our PullToRefreshLayout
-				.setup(mPullToRefreshLayout);
+		ft.commit();
+
 	}
 
-	@Override
-	public void onRefreshStarted(View view) {
-		/**
-		 * Simulate Refresh with 4 seconds sleep
-		 */
-		new AsyncTask<Void, Void, Void>() {
-			List<Tournoi> tournois;
+	private void initParse() {
+		Config config = Config.getInstance(this);
+		Parse.initialize(this, config.getProperty("pushApplicationId"), config.getProperty("pushApplicationClientKey"));
 
-			@Override
-			protected Void doInBackground(Void... params) {
-				tournois = TournoiService.getInstance(getApplicationContext())
-						.getTournois();
-				return null;
-			}
-
-			@Override
-			protected void onPostExecute(Void result) {
-				super.onPostExecute(result);
-				tournoisAdapter.clear();
-				tournoisAdapter.addAll(tournois);
-				tournoisAdapter.notifyDataSetChanged();
-
-				// Notify PullToRefreshLayout that the refresh has finished
-				mPullToRefreshLayout.setRefreshComplete();
-			}
-		}.execute();
+		PushService.subscribe(this, "News", MainActivity.class);
 	}
 
+	/**
+	 * This is a secondary activity, to show what the user has selected when the
+	 * screen is not large enough to show it all in one activity.
+	 */
+
+	public static class JoueursActivity extends FragmentActivity {
+
+		@Override
+		protected void onCreate(Bundle savedInstanceState) {
+			super.onCreate(savedInstanceState);
+			requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
+			setProgressBarIndeterminateVisibility(true);
+			setContentView(R.layout.activity_joueurs_list);
+
+			if ((getResources().getConfiguration().screenLayout & Configuration.SCREENLAYOUT_SIZE_MASK) >= Configuration.SCREENLAYOUT_SIZE_LARGE
+					&& getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) {
+				// If the screen is now in landscape mode, we can show the
+				// dialog in-line with the list so we don't need this activity.
+				finish();
+				return;
+			}
+
+			if (savedInstanceState == null) {
+				JoueursResponderFragment details = (JoueursResponderFragment) getSupportFragmentManager().findFragmentByTag("JoueurRESTResponder");
+
+				if (details == null) {
+					details = new JoueursResponderFragment();
+				}
+				details.setArguments(getIntent().getExtras());
+				getSupportFragmentManager().beginTransaction().replace(R.id.fragment_joueurs, details).commit();
+			}
+		}
+	}
+
+	public void showJoueur(Tournoi tournoi) {
+
+		if ((getResources().getConfiguration().screenLayout & Configuration.SCREENLAYOUT_SIZE_MASK) >= Configuration.SCREENLAYOUT_SIZE_LARGE
+				&& getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) {
+			JoueursResponderFragment details = (JoueursResponderFragment) getSupportFragmentManager().findFragmentByTag("JoueurRESTResponder");
+
+			if (details == null) {
+				details = JoueursResponderFragment.newInstance(tournoi.getNom());
+			}
+			FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+			ft.replace(R.id.fragment_joueurs, details);
+			// ft.addToBackStack(null);
+			ft.commit();
+
+		} else {
+			Intent intent = new Intent();
+			intent.setClass(this, JoueursActivity.class);
+			intent.putExtra("tournoi", tournoi.getNom());
+			startActivity(intent);
+		}
+
+	}
 }

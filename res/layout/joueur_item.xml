@@ -8,8 +8,7 @@
     android:layout_marginTop="10dp"
     android:background="@drawable/joueur_selector"
     android:focusable="false"
-    android:paddingLeft="10dip"
-    android:paddingRight="10dip" >
+    android:padding="10dip" >
 
     <LinearLayout
         android:id="@+id/Text"
@@ -31,7 +30,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:focusable="false"
-            android:textColor="@android:color/darker_gray"
+            android:textColor="@color/darkGrey"
             android:textSize="14sp"
             android:textStyle="bold" />
     </LinearLayout>
@@ -42,7 +41,7 @@
         android:layout_height="24dp"
         android:layout_alignParentRight="true"
         android:layout_centerVertical="true"
-        android:contentDescription="Payé"
+        android:contentDescription="@string/paye"
         android:focusable="false" />
 
 </RelativeLayout>

@@ -6,5 +6,9 @@
     <string name="action_settings">Settings</string>
     <string name="hello_world">Hello world!</string>
     <string name="tarifs">Tarifs: </string>
+    <string name="nbInscrits">Nb Inscrits: </string>
+    <string name="nbPaye">Nb Payé: </string>
+    <string name="paye">Payé</string>
+    <string name="pasDinscrits">Pas d\'inscrits</string>
 
 </resources>
