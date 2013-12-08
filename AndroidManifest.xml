@@ -20,7 +20,9 @@
         android:theme="@style/AppTheme" >
         <service android:name=".service.RESTService" />
 
-        <activity android:name="com.bretibad.tournoibretibad.MainActivity" >
+        <activity
+            android:name="com.bretibad.tournoibretibad.MainActivity"
+            android:windowSoftInputMode="adjustPan" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

@@ -68,12 +68,17 @@ public class JoueursResponderFragment extends RESTResponderFragment {
 		outState.putIntArray("selecedJoueur", joueurAdapter.getSelectedIdsArray());
 		super.onSaveInstanceState(outState);
 	}
+	
+	@Override
+	public void onResume() {
+		super.onResume();
+		getActivity().setTitle("Tournoi " + tournoi);
+	}
 
 	@Override
 	public void onViewCreated(View view, final Bundle savedInstanceState) {
 		super.onViewCreated(view, savedInstanceState);
 		tournoi = getArguments().getString("tournoi");
-		getActivity().setTitle("Tournoi " + tournoi);
 
 		joueurAdapter = new JoueurAdapter(getActivity(), android.R.id.list, new ArrayList<Joueur>(), tournoi);
 		listView.setAdapter(joueurAdapter);

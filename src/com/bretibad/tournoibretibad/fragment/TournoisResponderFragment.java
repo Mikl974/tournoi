@@ -40,6 +40,12 @@ public class TournoisResponderFragment extends RESTResponderFragment implements 
 		super.onActivityCreated(savedInstanceState);
 		setTournois();
 	}
+	
+	@Override
+	public void onResume() {
+		super.onResume();
+		getActivity().setTitle(R.string.app_name);
+	}
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
