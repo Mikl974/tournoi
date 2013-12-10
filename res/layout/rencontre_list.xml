@@ -1,0 +1,22 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginBottom="10dp"
+    android:layout_marginLeft="5dp"
+    android:layout_marginRight="5dp"
+    android:layout_marginTop="10dp"
+    android:focusable="false"
+    android:padding="10dip" >
+
+    <ListView
+        android:id="@+id/rencontres_listview"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_gravity="start"
+        android:choiceMode="none"
+        android:clickable="false"
+        android:divider="@color/lineSeparator"
+        android:dividerHeight="1dp" 
+        android:listSelector="@android:color/transparent"/>
+
+</RelativeLayout>
