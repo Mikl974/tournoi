@@ -20,11 +20,15 @@ import org.apache.http.client.methods.HttpPut;
 import org.apache.http.client.methods.HttpRequestBase;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.message.BasicNameValuePair;
+import org.apache.http.params.BasicHttpParams;
+import org.apache.http.params.HttpConnectionParams;
+import org.apache.http.params.HttpParams;
 import org.apache.http.util.EntityUtils;
 
 import android.app.IntentService;
 import android.content.Intent;
 import android.net.Uri;
+import android.net.http.AndroidHttpClient;
 import android.os.Bundle;
 import android.os.ResultReceiver;
 import android.util.Log;
@@ -122,7 +126,10 @@ public class RESTService extends IntentService {
             }
             
             if (request != null) {
-                HttpClient client = new DefaultHttpClient();
+            	HttpParams httpParams = new BasicHttpParams();
+            	HttpConnectionParams.setConnectionTimeout(httpParams, 3000);
+            	HttpConnectionParams.setSoTimeout(httpParams, 5000);
+                HttpClient client = new DefaultHttpClient(httpParams);
                 
                 // Let's send some useful debug information so we can monitor things
                 // in LogCat.

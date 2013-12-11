@@ -1,27 +1,13 @@
 package com.bretibad.tournoibretibad.service;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Properties;
-
-import org.apache.http.HttpEntity;
-import org.apache.http.HttpResponse;
-import org.apache.http.NameValuePair;
-import org.apache.http.client.entity.UrlEncodedFormEntity;
-import org.apache.http.client.methods.HttpPost;
 import org.apache.http.impl.client.DefaultHttpClient;
-import org.apache.http.message.BasicNameValuePair;
-import org.apache.http.util.EntityUtils;
 
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.ResultReceiver;
-import android.util.Log;
 
-import com.bretibad.tournoibretibad.model.Joueur;
-import com.bretibad.tournoibretibad.utils.AssetsPropertyReader;
 import com.bretibad.tournoibretibad.utils.Config;
 
 public class RencontreService {
@@ -43,6 +29,22 @@ public class RencontreService {
 		Intent intent = new Intent(context, RESTService.class);
 		intent.setData(Uri.parse(baseUrl + config.getProperty("rencontre")));
 
+		intent.putExtra(RESTService.EXTRA_RESULT_RECEIVER, receiver);
+		return intent;
+	}
+	
+	public Intent getUpdateResultatsIntent(int numEquipe, int journee, String champs, String set, ResultReceiver receiver) {
+		Intent intent = new Intent(context, RESTService.class);
+		intent.setData(Uri.parse(baseUrl + config.getProperty("updateResultats")));
+
+		Bundle params = new Bundle();
+		params.putInt("numEquipe", numEquipe);
+		params.putInt("journee", journee);
+		params.putString("champs", champs);
+		params.putString("set", set);
+
+		intent.putExtra(RESTService.EXTRA_HTTP_VERB, RESTService.POST);
+		intent.putExtra(RESTService.EXTRA_PARAMS, params);
 		intent.putExtra(RESTService.EXTRA_RESULT_RECEIVER, receiver);
 		return intent;
 	}

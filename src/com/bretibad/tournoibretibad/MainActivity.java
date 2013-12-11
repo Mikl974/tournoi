@@ -209,6 +209,7 @@ public class MainActivity extends FragmentActivity {
 			if (rencontreFragment == null) {
 				rencontreFragment = new RencontreResponderFragment();
 			}
+			rencontreFragment.setRencontres(null);
 			ft.replace(R.id.fragment_content, rencontreFragment, "RencontreResponderFragment");
 			ft.addToBackStack(null);
 			ft.commit();

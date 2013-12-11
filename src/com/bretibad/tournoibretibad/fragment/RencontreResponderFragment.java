@@ -24,7 +24,8 @@ import com.google.gson.reflect.TypeToken;
 
 public class RencontreResponderFragment extends RESTResponderFragment {
 
-	private List<Rencontre> rencontres;
+	List<Rencontre> rencontres;
+
 	ListView listView;
 	RencontreAdapter adapter;
 	PullToRefreshLayout mPullToRefreshLayout;
@@ -46,7 +47,8 @@ public class RencontreResponderFragment extends RESTResponderFragment {
 		super.onCreate(savedInstanceState);
 		getActivity().setProgressBarIndeterminateVisibility(true);
 		if (savedInstanceState != null) {
-			rencontres = savedInstanceState.getParcelableArrayList("rencontres");
+			// rencontres =
+			// savedInstanceState.getParcelableArrayList("rencontres");
 		}
 	}
 
@@ -97,5 +99,13 @@ public class RencontreResponderFragment extends RESTResponderFragment {
 						Toast.LENGTH_SHORT).show();
 			}
 		}
+	}
+
+	public List<Rencontre> getRencontres() {
+		return rencontres;
+	}
+
+	public void setRencontres(List<Rencontre> rencontres) {
+		this.rencontres = rencontres;
 	}
 }
