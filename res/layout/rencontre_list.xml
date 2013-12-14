@@ -2,11 +2,11 @@
     android:layout_width="fill_parent"
     android:layout_height="wrap_content"
     android:layout_marginBottom="10dp"
-    android:layout_marginLeft="5dp"
-    android:layout_marginRight="5dp"
+    android:layout_marginLeft="0dp"
+    android:layout_marginRight="0dp"
     android:layout_marginTop="10dp"
     android:focusable="false"
-    android:padding="10dip" >
+    android:padding="5dip" >
 
     <ListView
         android:id="@+id/rencontres_listview"

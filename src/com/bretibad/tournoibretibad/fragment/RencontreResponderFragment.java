@@ -28,7 +28,6 @@ public class RencontreResponderFragment extends RESTResponderFragment {
 
 	ListView listView;
 	RencontreAdapter adapter;
-	PullToRefreshLayout mPullToRefreshLayout;
 
 	@Override
 	public void onActivityCreated(Bundle savedInstanceState) {

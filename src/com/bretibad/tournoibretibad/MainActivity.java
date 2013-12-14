@@ -16,6 +16,7 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
+import com.bretibad.tournoibretibad.fragment.EquipeFragment;
 import com.bretibad.tournoibretibad.fragment.JoueursResponderFragment;
 import com.bretibad.tournoibretibad.fragment.RencontreResponderFragment;
 import com.bretibad.tournoibretibad.fragment.TournoisResponderFragment;
@@ -29,6 +30,7 @@ public class MainActivity extends FragmentActivity {
 
 	TournoisResponderFragment tournoiListFragment;
 	RencontreResponderFragment rencontreFragment;
+	EquipeFragment equipeFragment;
 
 	private DrawerLayout mDrawerLayout;
 	private ListView mDrawerList;
@@ -72,40 +74,6 @@ public class MainActivity extends FragmentActivity {
 		ParseInstallation.getCurrentInstallation().saveInBackground();
 	}
 
-	// public static class JoueursActivity extends FragmentActivity {
-	//
-	// @Override
-	// protected void onCreate(Bundle savedInstanceState) {
-	// super.onCreate(savedInstanceState);
-	// requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
-	// setProgressBarIndeterminateVisibility(true);
-	// setContentView(R.layout.activity_joueurs_list);
-	//
-	// if ((getResources().getConfiguration().screenLayout &
-	// Configuration.SCREENLAYOUT_SIZE_MASK) >=
-	// Configuration.SCREENLAYOUT_SIZE_LARGE
-	// && getResources().getConfiguration().orientation ==
-	// Configuration.ORIENTATION_LANDSCAPE) {
-	// // If the screen is now in landscape mode, we can show the
-	// // dialog in-line with the list so we don't need this activity.
-	// finish();
-	// return;
-	// }
-	//
-	// if (savedInstanceState == null) {
-	// JoueursResponderFragment details = (JoueursResponderFragment)
-	// getSupportFragmentManager().findFragmentByTag("JoueurRESTResponder");
-	//
-	// if (details == null) {
-	// details = new JoueursResponderFragment();
-	// }
-	// details.setArguments(getIntent().getExtras());
-	// getSupportFragmentManager().beginTransaction().replace(R.id.fragment_joueurs,
-	// details).commit();
-	// }
-	// }
-	// }
-
 	public void showJoueur(Tournoi tournoi) {
 
 		if ((getResources().getConfiguration().screenLayout & Configuration.SCREENLAYOUT_SIZE_MASK) >= Configuration.SCREENLAYOUT_SIZE_LARGE
@@ -143,7 +111,7 @@ public class MainActivity extends FragmentActivity {
 		mDrawerList = (ListView) findViewById(R.id.left_drawer);
 
 		// Set the adapter for the list view
-		mDrawerList.setAdapter(new ArrayAdapter<String>(this, R.layout.drawer_list_item, Arrays.asList("Tournoi", "Rencontres IC")));
+		mDrawerList.setAdapter(new ArrayAdapter<String>(this, R.layout.drawer_list_item, Arrays.asList("Tournoi", "Match en cours", "Resultats")));
 		// Set the list's click listener
 		mDrawerList.setOnItemClickListener(new DrawerItemClickListener());
 
@@ -211,6 +179,16 @@ public class MainActivity extends FragmentActivity {
 			}
 			rencontreFragment.setRencontres(null);
 			ft.replace(R.id.fragment_content, rencontreFragment, "RencontreResponderFragment");
+			ft.addToBackStack(null);
+			ft.commit();
+
+			break;
+		case 2:
+			equipeFragment = (EquipeFragment) fm.findFragmentByTag("equipeFragment");
+			if (equipeFragment == null) {
+				equipeFragment = new EquipeFragment();
+			}
+			ft.replace(R.id.fragment_content, equipeFragment, "equipeFragment");
 			ft.addToBackStack(null);
 			ft.commit();
 

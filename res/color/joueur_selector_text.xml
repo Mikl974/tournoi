@@ -5,9 +5,9 @@
     <item android:state_pressed="true" android:color="#FFFFFF"/>
     <item android:state_selected="true" android:color="#FF0000"/>
     <item android:state_activated="true" android:color="#FFFFFF"/>
-    <item android:state_focused="true" android:color="#5DA9D2"/>
+    <item android:state_focused="true" android:color="#5DA9D2"/>
     -->
 
-    <item android:color="#5DA9D2"/>
+    <item android:color="@color/darkBlue"/>
 
 </selector>
