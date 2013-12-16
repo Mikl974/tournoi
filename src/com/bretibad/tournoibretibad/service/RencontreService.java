@@ -32,7 +32,7 @@ public class RencontreService {
 		intent.putExtra(RESTService.EXTRA_RESULT_RECEIVER, receiver);
 		return intent;
 	}
-	
+
 	public Intent getUpdateResultatsIntent(int numEquipe, int journee, String champs, String set, ResultReceiver receiver) {
 		Intent intent = new Intent(context, RESTService.class);
 		intent.setData(Uri.parse(baseUrl + config.getProperty("updateResultats")));
@@ -42,6 +42,25 @@ public class RencontreService {
 		params.putInt("journee", journee);
 		params.putString("champs", champs);
 		params.putString("set", set);
+
+		intent.putExtra(RESTService.EXTRA_HTTP_VERB, RESTService.POST);
+		intent.putExtra(RESTService.EXTRA_PARAMS, params);
+		intent.putExtra(RESTService.EXTRA_RESULT_RECEIVER, receiver);
+		return intent;
+	}
+
+	public Intent getUpdateResultatsIntentNew(int numEquipe, int journee, String champsSetp, String valueSetp, String champsSetc, String valueSetc,
+			ResultReceiver receiver) {
+		Intent intent = new Intent(context, RESTService.class);
+		intent.setData(Uri.parse(baseUrl + config.getProperty("updateResultats")));
+
+		Bundle params = new Bundle();
+		params.putInt("numEquipe", numEquipe);
+		params.putInt("journee", journee);
+		params.putString("champsSetp", champsSetp);
+		params.putString("valueSetp", valueSetp);
+		params.putString("champsSetc", champsSetc);
+		params.putString("valueSetc", valueSetc);
 
 		intent.putExtra(RESTService.EXTRA_HTTP_VERB, RESTService.POST);
 		intent.putExtra(RESTService.EXTRA_PARAMS, params);

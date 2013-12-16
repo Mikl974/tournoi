@@ -7,6 +7,7 @@
         android:id="@+id/rencontre_title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginBottom="15sp"
         android:focusable="false"
         android:textColor="@color/darkerGrey"
         android:textSize="20sp"
@@ -16,6 +17,7 @@
         android:id="@+id/sh1Panel"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginBottom="15sp"
         android:orientation="horizontal" >
 
         <TextView
@@ -26,37 +28,21 @@
             android:textColor="@color/joueur_selector_text"
             android:textSize="15sp" />
 
-        <EditText
-            android:id="@+id/sh1sp"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:digits="012"
-            android:imeOptions="actionDone"
-            android:inputType="number"
-            android:maxLength="1" android:textSize="15sp"  />
-
         <TextView
+            android:id="@+id/scoreSh1"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:focusable="false"
-            android:text="/"
+            android:paddingLeft="10sp"
             android:textColor="@color/joueur_selector_text"
             android:textSize="15sp" />
-
-        <EditText
-            android:id="@+id/sh1sc"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:digits="012"
-            android:imeOptions="actionDone"
-            android:inputType="number"
-            android:maxLength="1" android:textSize="15sp"  />
     </LinearLayout>
 
     <LinearLayout
         android:id="@+id/sh2Panel"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginBottom="15sp"
         android:orientation="horizontal" >
 
         <TextView
@@ -67,37 +53,21 @@
             android:textColor="@color/joueur_selector_text"
             android:textSize="15sp" />
 
-        <EditText
-            android:id="@+id/sh2sp"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:digits="012"
-            android:imeOptions="actionDone"
-            android:inputType="number"
-            android:maxLength="1" android:textSize="15sp"  />
-
         <TextView
+            android:id="@+id/scoreSh2"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:focusable="false"
-            android:text="/"
+            android:paddingLeft="10sp"
             android:textColor="@color/joueur_selector_text"
             android:textSize="15sp" />
-
-        <EditText
-            android:id="@+id/sh2sc"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:digits="012"
-            android:imeOptions="actionDone"
-            android:inputType="number"
-            android:maxLength="1" android:textSize="15sp"  />
     </LinearLayout>
 
     <LinearLayout
         android:id="@+id/sh3Panel"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginBottom="15sp"
         android:orientation="horizontal" >
 
         <TextView
@@ -108,37 +78,21 @@
             android:textColor="@color/joueur_selector_text"
             android:textSize="15sp" />
 
-        <EditText
-            android:id="@+id/sh3sp"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:digits="012"
-            android:imeOptions="actionDone"
-            android:inputType="number"
-            android:maxLength="1" android:textSize="15sp"  />
-
         <TextView
+            android:id="@+id/scoreSh3"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:focusable="false"
-            android:text="/"
+            android:paddingLeft="10sp"
             android:textColor="@color/joueur_selector_text"
             android:textSize="15sp" />
-
-        <EditText
-            android:id="@+id/sh3sc"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:digits="012"
-            android:imeOptions="actionDone"
-            android:inputType="number"
-            android:maxLength="1" android:textSize="15sp"  />
     </LinearLayout>
 
     <LinearLayout
         android:id="@+id/sd1Panel"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginBottom="15sp"
         android:orientation="horizontal" >
 
         <TextView
@@ -149,37 +103,21 @@
             android:textColor="@color/joueur_selector_text"
             android:textSize="15sp" />
 
-        <EditText
-            android:id="@+id/sd1sp"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:digits="012"
-            android:imeOptions="actionDone"
-            android:inputType="number"
-            android:maxLength="1" android:textSize="15sp"  />
-
         <TextView
+            android:id="@+id/scoreSd1"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:focusable="false"
-            android:text="/"
+            android:paddingLeft="10sp"
             android:textColor="@color/joueur_selector_text"
             android:textSize="15sp" />
-
-        <EditText
-            android:id="@+id/sd1sc"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:digits="012"
-            android:imeOptions="actionDone"
-            android:inputType="number"
-            android:maxLength="1" android:textSize="15sp"  />
     </LinearLayout>
 
     <LinearLayout
         android:id="@+id/sd2Panel"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginBottom="15sp"
         android:orientation="horizontal" >
 
         <TextView
@@ -190,37 +128,21 @@
             android:textColor="@color/joueur_selector_text"
             android:textSize="15sp" />
 
-        <EditText
-            android:id="@+id/sd2sp"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:digits="012"
-            android:imeOptions="actionDone"
-            android:inputType="number"
-            android:maxLength="1" android:textSize="15sp"  />
-
         <TextView
+            android:id="@+id/scoreSd2"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:focusable="false"
-            android:text="/"
+            android:paddingLeft="10sp"
             android:textColor="@color/joueur_selector_text"
             android:textSize="15sp" />
-
-        <EditText
-            android:id="@+id/sd2sc"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:digits="012"
-            android:imeOptions="actionDone"
-            android:inputType="number"
-            android:maxLength="1" android:textSize="15sp"  />
     </LinearLayout>
 
     <LinearLayout
         android:id="@+id/dh1Panel"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginBottom="15sp"
         android:orientation="horizontal" >
 
         <TextView
@@ -231,37 +153,21 @@
             android:textColor="@color/joueur_selector_text"
             android:textSize="15sp" />
 
-        <EditText
-            android:id="@+id/dh1sp"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:digits="012"
-            android:imeOptions="actionDone"
-            android:inputType="number"
-            android:maxLength="1" android:textSize="15sp"  />
-
         <TextView
+            android:id="@+id/scoreDh1"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:focusable="false"
-            android:text="/"
+            android:paddingLeft="10sp"
             android:textColor="@color/joueur_selector_text"
             android:textSize="15sp" />
-
-        <EditText
-            android:id="@+id/dh1sc"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:digits="012"
-            android:imeOptions="actionDone"
-            android:inputType="number"
-            android:maxLength="1" android:textSize="15sp"  />
     </LinearLayout>
 
     <LinearLayout
         android:id="@+id/dd1Panel"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginBottom="15sp"
         android:orientation="horizontal" >
 
         <TextView
@@ -272,37 +178,21 @@
             android:textColor="@color/joueur_selector_text"
             android:textSize="15sp" />
 
-        <EditText
-            android:id="@+id/dd1sp"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:digits="012"
-            android:imeOptions="actionDone"
-            android:inputType="number"
-            android:maxLength="1" android:textSize="15sp"  />
-
         <TextView
+            android:id="@+id/scoreDd1"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:focusable="false"
-            android:text="/"
+            android:paddingLeft="10sp"
             android:textColor="@color/joueur_selector_text"
             android:textSize="15sp" />
-
-        <EditText
-            android:id="@+id/dd1sc"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:digits="012"
-            android:imeOptions="actionDone"
-            android:inputType="number"
-            android:maxLength="1" android:textSize="15sp"  />
     </LinearLayout>
 
     <LinearLayout
         android:id="@+id/dx1Panel"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginBottom="15sp"
         android:orientation="horizontal" >
 
         <TextView
@@ -313,37 +203,21 @@
             android:textColor="@color/joueur_selector_text"
             android:textSize="15sp" />
 
-        <EditText
-            android:id="@+id/dx1sp"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:digits="012"
-            android:imeOptions="actionDone"
-            android:inputType="number"
-            android:maxLength="1" android:textSize="15sp"  />
-
         <TextView
+            android:id="@+id/scoreDx1"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:focusable="false"
-            android:text="/"
+            android:paddingLeft="10sp"
             android:textColor="@color/joueur_selector_text"
             android:textSize="15sp" />
-
-        <EditText
-            android:id="@+id/dx1sc"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:digits="012"
-            android:imeOptions="actionDone"
-            android:inputType="number"
-            android:maxLength="1" android:textSize="15sp"  />
     </LinearLayout>
 
     <LinearLayout
         android:id="@+id/dx2Panel"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginBottom="15sp"
         android:orientation="horizontal" >
 
         <TextView
@@ -354,33 +228,14 @@
             android:textColor="@color/joueur_selector_text"
             android:textSize="15sp" />
 
-        <EditText
-            android:id="@+id/dx2sp"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:digits="012"
-            android:imeOptions="actionDone"
-            android:inputType="number"
-            android:maxLength="1" android:textSize="15sp"  />
-
         <TextView
+            android:id="@+id/scoreDx2"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:focusable="false"
-            android:text="/"
+            android:paddingLeft="10sp"
             android:textColor="@color/joueur_selector_text"
             android:textSize="15sp" />
-
-        <EditText
-            android:id="@+id/dx2sc"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:digits="012"
-            android:imeOptions="actionDone"
-            android:inputType="number"
-            android:maxLength="1"
-            android:textSize="15sp" />
-
     </LinearLayout>
 
 </LinearLayout>
