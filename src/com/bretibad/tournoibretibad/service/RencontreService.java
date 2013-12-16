@@ -33,6 +33,14 @@ public class RencontreService {
 		return intent;
 	}
 
+	public Intent getRencontreIntent(ResultReceiver receiver, int numEquipe, int journee) {
+		Intent intent = new Intent(context, RESTService.class);
+		intent.setData(Uri.parse(baseUrl + config.getProperty("rencontre") + "/" + numEquipe + "/" + journee));
+
+		intent.putExtra(RESTService.EXTRA_RESULT_RECEIVER, receiver);
+		return intent;
+	}
+
 	public Intent getUpdateResultatsIntent(int numEquipe, int journee, String champs, String set, ResultReceiver receiver) {
 		Intent intent = new Intent(context, RESTService.class);
 		intent.setData(Uri.parse(baseUrl + config.getProperty("updateResultats")));
@@ -64,6 +72,14 @@ public class RencontreService {
 
 		intent.putExtra(RESTService.EXTRA_HTTP_VERB, RESTService.POST);
 		intent.putExtra(RESTService.EXTRA_PARAMS, params);
+		intent.putExtra(RESTService.EXTRA_RESULT_RECEIVER, receiver);
+		return intent;
+	}
+
+	public Intent getJourneeIntent(ResultReceiver receiver, int numequipe) {
+		Intent intent = new Intent(context, RESTService.class);
+		intent.setData(Uri.parse(baseUrl + config.getProperty("getJournee") + numequipe));
+
 		intent.putExtra(RESTService.EXTRA_RESULT_RECEIVER, receiver);
 		return intent;
 	}
