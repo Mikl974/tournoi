@@ -28,7 +28,6 @@ import org.apache.http.util.EntityUtils;
 import android.app.IntentService;
 import android.content.Intent;
 import android.net.Uri;
-import android.net.http.AndroidHttpClient;
 import android.os.Bundle;
 import android.os.ResultReceiver;
 import android.util.Log;

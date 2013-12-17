@@ -84,6 +84,14 @@ public class RencontreService {
 		return intent;
 	}
 
+	public Intent getListJoueurIntent(ResultReceiver receiver) {
+		Intent intent = new Intent(context, RESTService.class);
+		intent.setData(Uri.parse(baseUrl + config.getProperty("listJoueur")));
+
+		intent.putExtra(RESTService.EXTRA_RESULT_RECEIVER, receiver);
+		return intent;
+	}
+
 	public static RencontreService getInstance(Context context) {
 		if (instance == null) {
 			instance = new RencontreService(context);

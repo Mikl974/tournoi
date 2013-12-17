@@ -24,6 +24,7 @@ import com.bretibad.tournoibretibad.adpter.RencontreAdapter;
 import com.bretibad.tournoibretibad.model.Rencontre;
 import com.bretibad.tournoibretibad.service.RESTService;
 import com.bretibad.tournoibretibad.service.RencontreService;
+import com.bretibad.tournoibretibad.utils.RestResultReceiver;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
@@ -59,12 +60,12 @@ public class EquipeFragment extends Fragment {
 			@Override
 			public void onItemSelected(final AdapterView<?> parentView, View selectedItemView, int position, long id) {
 				getActivity().setProgressBarIndeterminateVisibility(true);
-				Intent journeeIntent = RencontreService.getInstance(parentView.getContext()).getJourneeIntent(new ResultReceiver(new Handler()) {
+
+				Intent journeeIntent = RencontreService.getInstance(parentView.getContext()).getJourneeIntent(new RestResultReceiver() {
 
 					@Override
-					protected void onReceiveResult(int resultCode, Bundle resultData) {
-						if (resultData != null && resultData.containsKey(RESTService.REST_RESULT)) {
-							String result = resultData.getString(RESTService.REST_RESULT);
+					public void onRESTResult(int resultCode, String result) {
+						if (resultCode == 200) {
 							Type journeeType = new TypeToken<List<Rencontre>>() {
 							}.getType();
 							Gson gson = new Gson();
@@ -82,8 +83,10 @@ public class EquipeFragment extends Fragment {
 									Toast.LENGTH_SHORT).show();
 						}
 						getActivity().setProgressBarIndeterminateVisibility(false);
+
 					}
 				}, position + 1);
+
 				parentView.getContext().startService(journeeIntent);
 			}
 
@@ -98,11 +101,10 @@ public class EquipeFragment extends Fragment {
 			public void onItemSelected(final AdapterView<?> parentView, View selectedItemView, int position, long id) {
 				getActivity().setProgressBarIndeterminateVisibility(true);
 
-				Intent rencontreIntent = RencontreService.getInstance(parentView.getContext()).getRencontreIntent(new ResultReceiver(new Handler()) {
+				Intent rencontreIntent = RencontreService.getInstance(parentView.getContext()).getRencontreIntent(new RestResultReceiver() {
 					@Override
-					protected void onReceiveResult(int resultCode, Bundle resultData) {
-						if (resultData != null && resultData.containsKey(RESTService.REST_RESULT)) {
-							String result = resultData.getString(RESTService.REST_RESULT);
+					public void onRESTResult(int resultCode, String result) {
+						if (resultCode == 200) {
 							Type rencontreType = new TypeToken<List<Rencontre>>() {
 							}.getType();
 							Gson gson = new Gson();

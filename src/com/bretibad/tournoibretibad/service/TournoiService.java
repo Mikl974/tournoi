@@ -2,7 +2,6 @@ package com.bretibad.tournoibretibad.service;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Properties;
 
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
@@ -21,7 +20,6 @@ import android.os.ResultReceiver;
 import android.util.Log;
 
 import com.bretibad.tournoibretibad.model.Joueur;
-import com.bretibad.tournoibretibad.utils.AssetsPropertyReader;
 import com.bretibad.tournoibretibad.utils.Config;
 
 public class TournoiService {

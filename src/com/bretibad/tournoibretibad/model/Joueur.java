@@ -11,8 +11,8 @@ import android.os.Parcelable;
 
 public class Joueur implements Parcelable {
 
-	private String nom;
-	private String prenom;
+	private String Nom;
+	private String Prenom;
 	private String licence;
 	private int paye;
 
@@ -24,19 +24,19 @@ public class Joueur implements Parcelable {
 	}
 
 	public String getNom() {
-		return nom;
+		return Nom;
 	}
 
 	public void setNom(String nom) {
-		this.nom = nom;
+		this.Nom = nom;
 	}
 
 	public String getPrenom() {
-		return prenom;
+		return Prenom;
 	}
 
 	public void setPrenom(String prenom) {
-		this.prenom = prenom;
+		this.Prenom = prenom;
 	}
 
 	public String getLicence() {
@@ -89,15 +89,15 @@ public class Joueur implements Parcelable {
 
 	@Override
 	public void writeToParcel(Parcel dest, int flags) {
-		dest.writeString(nom);
-		dest.writeString(prenom);
+		dest.writeString(Nom);
+		dest.writeString(Prenom);
 		dest.writeString(licence);
 		dest.writeInt(paye);
 	}
 
 	private void readFromParcel(Parcel in) {
-		nom = in.readString();
-		prenom = in.readString();
+		Nom = in.readString();
+		Prenom = in.readString();
 		licence = in.readString();
 		paye = in.readInt();
 
