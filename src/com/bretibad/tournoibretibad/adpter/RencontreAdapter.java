@@ -43,7 +43,7 @@ public class RencontreAdapter extends ArrayAdapter<Rencontre> {
 
 	@Override
 	public boolean isEnabled(int position) {
-		return true;// dtos.get(position).getPaye() == 0;
+		return true;
 	}
 
 	@Override
@@ -121,6 +121,7 @@ public class RencontreAdapter extends ArrayAdapter<Rencontre> {
 
 	private void initSh3(final ViewHolder holder, final Rencontre r) {
 		if (!r.getDivision().equals("Reg3")) {
+			holder.sh3Panel.setVisibility(View.VISIBLE);
 			holder.sh3.setText("SH3: " + r.getSh3());
 
 			holder.scoreSh3.setText(r.getSetpsh3() + " / " + r.getSetcsh3());
@@ -153,8 +154,9 @@ public class RencontreAdapter extends ArrayAdapter<Rencontre> {
 
 	private void initSd2(final ViewHolder holder, final Rencontre r) {
 		if (!r.getDivision().equals("Reg3")) {
-			holder.sd2.setVisibility(View.GONE);
+			holder.sd2Panel.setVisibility(View.GONE);
 		} else {
+			holder.sd2Panel.setVisibility(View.VISIBLE);
 			holder.sd2.setText("SD2 " + r.getSd2());
 
 			holder.scoreSd2.setText(r.getSetpsd2() + " / " + r.getSetcsd2());
@@ -213,8 +215,9 @@ public class RencontreAdapter extends ArrayAdapter<Rencontre> {
 
 	private void initDx2(final ViewHolder holder, final Rencontre r) {
 		if (!r.getDivision().equals("Reg3")) {
-			holder.dx2.setVisibility(View.GONE);
+			holder.dx2Panel.setVisibility(View.GONE);
 		} else {
+			holder.dx2Panel.setVisibility(View.VISIBLE);
 			holder.dx2.setText("DX2 " + r.getDx2());
 
 			holder.scoreDx2.setText(r.getSetpdx2() + " / " + r.getSetcdx2());
