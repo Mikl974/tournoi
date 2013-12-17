@@ -121,23 +121,6 @@ public class EquipeFragment extends Fragment {
 				}, equipeSpinner.getSelectedItemPosition() + 1, position + 1);
 
 				parentView.getContext().startService(rencontreIntent);
-
-				// FragmentManager fm = ((FragmentActivity)
-				// parentView.getContext()).getSupportFragmentManager();
-				// FragmentTransaction ft = fm.beginTransaction();
-				// rencontreEquipeFragment = (RencontreEquipeResponderFragment)
-				// fm.findFragmentByTag("RencontreEquipeResponderFragment");
-				// if (rencontreEquipeFragment == null) {
-				// rencontreEquipeFragment = new
-				// RencontreEquipeResponderFragment();
-				// }
-				// rencontreEquipeFragment.setRencontres(null,
-				// equipeSpinner.getSelectedItemPosition() + 1, position + 1);
-				// ft.replace(R.id.fragment_content, rencontreEquipeFragment,
-				// "RencontreEquipeResponderFragment");
-				// ft.addToBackStack(null);
-				// ft.commit();
-
 			}
 
 			@Override
