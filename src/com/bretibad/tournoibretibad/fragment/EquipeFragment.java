@@ -55,6 +55,8 @@ public class EquipeFragment extends Fragment {
 		adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 		// Apply the adapter to the spinner
 		equipeSpinner.setAdapter(adapter);
+		
+		//TODO: USE ARGUMENT TO SELECT Equipe and journne when call from popup
 
 		equipeSpinner.setOnItemSelectedListener(new OnItemSelectedListener() {
 			@Override
