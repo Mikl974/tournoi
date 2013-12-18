@@ -85,7 +85,10 @@ public class RencontreService {
 		params.putInt("numequipe", r.getNumequipe());
 		params.putInt("journee", r.getJournee());
 
-		params.putString("fintmatch", r.getFinmatch());
+		params.putString("matchpour", r.getMatchpour() != null ? (r.getMatchpour() + "") : "");
+		params.putString("matchcontre", r.getMatchcontre() != null ? (r.getMatchcontre() + "") : "");
+
+		params.putString("finmatch", r.getFinmatch());
 		params.putInt("live", r.getLive());
 
 		params.putString("sh1", r.getSh1());

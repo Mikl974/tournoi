@@ -16,7 +16,9 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.CheckBox;
+import android.widget.EditText;
 import android.widget.LinearLayout;
+import android.widget.NumberPicker;
 import android.widget.ScrollView;
 import android.widget.Spinner;
 import android.widget.TextView;
@@ -38,6 +40,7 @@ public class EditRencontreDialogueFragment extends DialogFragment {
 
 	Spinner sh1List, sh2List, sh3List, sd1List, sd2List, dh1J1List, dh1J2List, dd1J1List, dd1J2List, dx1J1List, dx1J2List, dx2J1List, dx2J2List;
 	LinearLayout sh3Panel, sd2Panel, dx2Panel;
+	EditText scorep, scorec;
 
 	CheckBox fin, live;
 	TextView title;
@@ -132,6 +135,9 @@ public class EditRencontreDialogueFragment extends DialogFragment {
 		fin = (CheckBox) view.findViewById(R.id.finMatchCheckBox);
 		live = (CheckBox) view.findViewById(R.id.liveCheckBox);
 
+		scorep = (EditText) view.findViewById(R.id.scorep);
+		scorec = (EditText) view.findViewById(R.id.scorec);
+
 		sh3Panel = (LinearLayout) view.findViewById(R.id.sh3Panel);
 		sd2Panel = (LinearLayout) view.findViewById(R.id.sd2Panel);
 		dx2Panel = (LinearLayout) view.findViewById(R.id.dx2Panel);
@@ -159,6 +165,11 @@ public class EditRencontreDialogueFragment extends DialogFragment {
 	protected void saveRencontre() {
 		rencontre.setLive(live.isChecked() ? 1 : 0);
 		rencontre.setFinmatch(fin.isChecked() ? "OK" : "");
+
+		String scorepValue = scorep.getText().toString();
+		String scorecValue = scorec.getText().toString();
+		rencontre.setMatchpour(scorepValue != null && !scorepValue.isEmpty() ? Integer.parseInt(scorepValue) : null);
+		rencontre.setMatchcontre(scorecValue != null && !scorecValue.isEmpty() ? Integer.parseInt(scorecValue) : null);
 
 		rencontre.setSh1((String) sh1List.getSelectedItem());
 		rencontre.setSh2((String) sh2List.getSelectedItem());
@@ -216,6 +227,7 @@ public class EditRencontreDialogueFragment extends DialogFragment {
 		title.setText("J" + rencontre.getJournee() + " - Equipe" + rencontre.getNumequipe() + " / " + rencontre.getAdversaire());
 
 		initCheckBox();
+		initScore();
 
 		for (MatchCategory cat : MatchCategory.values()) {
 			LinearLayout ll = new LinearLayout(getActivity());
@@ -270,6 +282,11 @@ public class EditRencontreDialogueFragment extends DialogFragment {
 			}
 
 		}
+	}
+
+	private void initScore() {
+		scorep.setText(rencontre.getMatchpour() != null ? (rencontre.getMatchpour() + "") : "");
+		scorec.setText(rencontre.getMatchcontre() != null ? (rencontre.getMatchcontre() + "") : "");
 	}
 
 	private void initCheckBox() {

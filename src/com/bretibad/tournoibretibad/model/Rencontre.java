@@ -37,6 +37,8 @@ public class Rencontre implements Parcelable {
 	private int setpdx2;
 	private int setcdx2;
 	private int live;
+	private Integer matchpour;
+	private Integer matchcontre;
 	private String finmatch;
 
 	public Rencontre(Parcel in) {
@@ -72,6 +74,8 @@ public class Rencontre implements Parcelable {
 		setpdx2 = in.readInt();
 		setcdx2 = in.readInt();
 		live = in.readInt();
+		matchpour = in.readInt();
+		matchcontre = in.readInt();
 		finmatch = in.readString();
 	}
 
@@ -118,6 +122,8 @@ public class Rencontre implements Parcelable {
 		dest.writeInt(setpdx2);
 		dest.writeInt(setcdx2);
 		dest.writeInt(live);
+		dest.writeInt(matchpour);
+		dest.writeInt(matchcontre);
 		dest.writeString(finmatch);
 	}
 
@@ -424,5 +430,21 @@ public class Rencontre implements Parcelable {
 
 	public void setFinmatch(String finmatch) {
 		this.finmatch = finmatch;
+	}
+
+	public Integer getMatchpour() {
+		return matchpour;
+	}
+
+	public void setMatchpour(Integer matchpour) {
+		this.matchpour = matchpour;
+	}
+
+	public Integer getMatchcontre() {
+		return matchcontre;
+	}
+
+	public void setMatchcontre(Integer matchcontre) {
+		this.matchcontre = matchcontre;
 	}
 }
