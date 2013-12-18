@@ -1,54 +1,51 @@
 package com.bretibad.tournoibretibad.fragment;
 
-import java.lang.reflect.Method;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Locale;
 
 import android.app.Activity;
 import android.app.AlertDialog;
-import android.app.Dialog;
 import android.app.AlertDialog.Builder;
+import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
-import android.support.v4.app.FragmentManager;
-import android.util.AttributeSet;
-import android.util.Pair;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.CheckBox;
-import android.widget.EditText;
 import android.widget.LinearLayout;
-import android.widget.ListView;
 import android.widget.ScrollView;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.bretibad.tournoibretibad.R;
 import com.bretibad.tournoibretibad.model.Joueur;
 import com.bretibad.tournoibretibad.model.MatchCategory;
 import com.bretibad.tournoibretibad.model.Rencontre;
 import com.bretibad.tournoibretibad.service.RencontreService;
 import com.bretibad.tournoibretibad.utils.RestResultReceiver;
-import com.bretibad.tournoibretibad.utils.StringUtils;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
 public class EditRencontreDialogueFragment extends DialogFragment {
 
+	AlertDialog.Builder builder;
 	private Rencontre rencontre;
-	ScrollView mainView;
 
 	Spinner sh1List, sh2List, sh3List, sd1List, sd2List, dh1J1List, dh1J2List, dd1J1List, dd1J2List, dx1J1List, dx1J2List, dx2J1List, dx2J2List;
+	LinearLayout sh3Panel, sd2Panel, dx2Panel;
+
 	CheckBox fin, live;
+	TextView title;
 
-	public NoticeDialogListener mListener;
+	NoticeEditRencontreDialogListener mListener;
 
-	public interface NoticeDialogListener {
-		public void onDialogPositiveClick(DialogFragment dialog);
+	public interface NoticeEditRencontreDialogListener {
+		public void onEditRencontreDialogPositiveClick(DialogFragment dialog, int equipe, int journee);
 
 	}
 
@@ -63,22 +60,31 @@ public class EditRencontreDialogueFragment extends DialogFragment {
 		return f;
 	}
 
+	// Override the Fragment.onAttach() method to instantiate the
+	// NoticeDialogListener
+	@Override
+	public void onAttach(Activity activity) {
+		super.onAttach(activity);
+		// Verify that the host activity implements the callback interface
+		try {
+			// Instantiate the NoticeDialogListener so we can send events to the
+			// host
+			mListener = (NoticeEditRencontreDialogListener) activity;
+		} catch (ClassCastException e) {
+			// The activity doesn't implement the interface, throw exception
+			throw new ClassCastException(activity.toString() + " must implement NoticeDialogListener");
+		}
+	}
+
 	@Override
 	public Dialog onCreateDialog(Bundle savedInstanceState) {
 		rencontre = (Rencontre) getArguments().getParcelable("rencontre");
-		mainView = new ScrollView(getActivity());
 		// Use the Builder class for convenient dialog construction
-		final AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+		builder = new AlertDialog.Builder(getActivity());
 
-		builder.setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
-			public void onClick(DialogInterface dialog, int id) {
-				saveRencontre();
-			}
-		}).setNegativeButton(android.R.string.cancel, new DialogInterface.OnClickListener() {
-			public void onClick(DialogInterface dialog, int id) {
-			}
-		}).setView(mainView);
+		initMainView();
 
+		getActivity().setProgressBarIndeterminateVisibility(true);
 		Intent listJoueurIntent = RencontreService.getInstance(getActivity()).getListJoueurIntent(new RestResultReceiver() {
 
 			@Override
@@ -89,40 +95,127 @@ public class EditRencontreDialogueFragment extends DialogFragment {
 					Gson gson = new Gson();
 					List<Joueur> joueurs = gson.fromJson(result, joueurType);
 					List<String> joueurTxt = new ArrayList<String>();
+					joueurTxt.add("");
 					for (Joueur j : joueurs) {
 						joueurTxt.add(j.getPrenom() + " " + j.getNom());
 					}
 
 					fillEditRencontrePopup(builder, joueurTxt);
+					getActivity().setProgressBarIndeterminateVisibility(false);
 
 				} else {
 					Toast.makeText(getActivity(), "Erreur: Impossible de récupérer la liste de joueurs", Toast.LENGTH_SHORT).show();
 				}
 			}
+
 		});
 		getActivity().startService(listJoueurIntent);
+
+		builder.setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
+			public void onClick(DialogInterface dialog, int id) {
+				saveRencontre();
+			}
+		}).setNegativeButton(android.R.string.cancel, new DialogInterface.OnClickListener() {
+			public void onClick(DialogInterface dialog, int id) {
+			}
+		});
 
 		return builder.create();
 	}
 
+	private void initMainView() {
+		LayoutInflater inflater = getActivity().getLayoutInflater();
+		View view = inflater.inflate(R.layout.edit_rencontre_fragment, null);
+		builder.setView(view);
+
+		title = (TextView) view.findViewById(R.id.edit_rencontre_title_panel);
+		fin = (CheckBox) view.findViewById(R.id.finMatchCheckBox);
+		live = (CheckBox) view.findViewById(R.id.liveCheckBox);
+
+		sh3Panel = (LinearLayout) view.findViewById(R.id.sh3Panel);
+		sd2Panel = (LinearLayout) view.findViewById(R.id.sd2Panel);
+		dx2Panel = (LinearLayout) view.findViewById(R.id.dx2Panel);
+
+		sh1List = (Spinner) view.findViewById(R.id.sh1List);
+		sh2List = (Spinner) view.findViewById(R.id.sh2List);
+		sh3List = (Spinner) view.findViewById(R.id.sh3List);
+
+		sd1List = (Spinner) view.findViewById(R.id.sd1List);
+		sd2List = (Spinner) view.findViewById(R.id.sd2List);
+
+		dh1J1List = (Spinner) view.findViewById(R.id.dh1J1List);
+		dh1J2List = (Spinner) view.findViewById(R.id.dh1J2List);
+
+		dd1J1List = (Spinner) view.findViewById(R.id.dd1J1List);
+		dd1J2List = (Spinner) view.findViewById(R.id.dd1J2List);
+
+		dx1J1List = (Spinner) view.findViewById(R.id.dx1J1List);
+		dx1J2List = (Spinner) view.findViewById(R.id.dx1J2List);
+
+		dx2J1List = (Spinner) view.findViewById(R.id.dx2J1List);
+		dx2J2List = (Spinner) view.findViewById(R.id.dx2J2List);
+	}
+
 	protected void saveRencontre() {
-		Object sh1Selected = sh1List.getSelectedItem();
-		Object sh2Selected = sh2List.getSelectedItem();
-		System.out.println();
+		rencontre.setLive(live.isChecked() ? 1 : 0);
+		rencontre.setFinmatch(fin.isChecked() ? "OK" : "");
+
+		rencontre.setSh1((String) sh1List.getSelectedItem());
+		rencontre.setSh2((String) sh2List.getSelectedItem());
+		if (sh3List != null) {
+			rencontre.setSh2((String) sh2List.getSelectedItem());
+		}
+		rencontre.setSd1((String) sd1List.getSelectedItem());
+		if (sd2List != null) {
+			rencontre.setSd2((String) sd2List.getSelectedItem());
+		}
+		String selectedDh1J1 = (String) dh1J1List.getSelectedItem();
+		String selectedDh1J2 = (String) dh1J2List.getSelectedItem();
+		if (selectedDh1J1.length() == 0 && selectedDh1J2.length() == 0) {
+			rencontre.setDh1("");
+		} else {
+			rencontre.setDh1(selectedDh1J1 + " - " + selectedDh1J2);
+		}
+		String selectedDd1J1 = (String) dd1J1List.getSelectedItem();
+		String selectedDd1J2 = (String) dd1J2List.getSelectedItem();
+		if (selectedDd1J1.length() == 0 && selectedDd1J2.length() == 0) {
+			rencontre.setDd1("");
+		} else {
+			rencontre.setDd1(selectedDd1J1 + " - " + selectedDd1J2);
+		}
+		String selectedDx1J1 = (String) dx1J1List.getSelectedItem();
+		String selectedDx1J2 = (String) dx1J2List.getSelectedItem();
+		if (selectedDx1J1.length() == 0 && selectedDx1J2.length() == 0) {
+			rencontre.setDx1("");
+		} else {
+			rencontre.setDx1(selectedDx1J1 + " - " + selectedDx1J2);
+		}
+		if (dx2J1List != null && dx2J2List != null) {
+			String selectedDx2J1 = (String) dx2J1List.getSelectedItem();
+			String selectedDx2J2 = (String) dx2J2List.getSelectedItem();
+			if (selectedDx2J1.length() == 0 && selectedDx2J2.length() == 0) {
+				rencontre.setDx2("");
+			} else {
+				rencontre.setDx2(selectedDx2J1 + " - " + selectedDx2J2);
+			}
+		}
+
+		Intent updateRencontreIntent = RencontreService.getInstance(getActivity()).getUpdateRencontreIntent(rencontre, new RestResultReceiver() {
+
+			@Override
+			public void onRESTResult(int resultCode, String result) {
+				mListener.onEditRencontreDialogPositiveClick(EditRencontreDialogueFragment.this, rencontre.getNumequipe(), rencontre.getJournee());
+			}
+		});
+		getActivity().startService(updateRencontreIntent);
 
 	}
 
 	protected void fillEditRencontrePopup(Builder alert, List<String> joueurTxt) {
 
-		LinearLayout container = new LinearLayout(getActivity());
-		container.setOrientation(LinearLayout.VERTICAL);
+		title.setText("J" + rencontre.getJournee() + " - Equipe" + rencontre.getNumequipe() + " / " + rencontre.getAdversaire());
 
-		TextView title = new TextView(getActivity());
-		title.setText("Editer: J" + rencontre.getJournee() + " - Equipe" + rencontre.getNumequipe());
-		title.setPadding(0, 0, 0, 15);
-		container.addView(title);
-
-		addCheckBox(container);
+		initCheckBox();
 
 		for (MatchCategory cat : MatchCategory.values()) {
 			LinearLayout ll = new LinearLayout(getActivity());
@@ -130,105 +223,76 @@ public class EditRencontreDialogueFragment extends DialogFragment {
 
 			switch (cat) {
 			case SH1:
-				sh1List = initSpinner(joueurTxt, cat.name(), ll, rencontre.getSh1());
+				initSpinner(sh1List, joueurTxt, cat.name(), ll, rencontre.getSh1());
 				break;
 			case SH2:
-				sh2List = initSpinner(joueurTxt, cat.name(), ll, rencontre.getSh2());
+				initSpinner(sh2List, joueurTxt, cat.name(), ll, rencontre.getSh2());
 				break;
 			case SH3:
 				if (!rencontre.getDivision().equals("Reg3")) {
-					sh3List = initSpinner(joueurTxt, cat.name(), ll, rencontre.getSh3());
+					sh3Panel.setVisibility(View.VISIBLE);
+					initSpinner(sh3List, joueurTxt, cat.name(), ll, rencontre.getSh3());
+				} else {
+					sh3Panel.setVisibility(View.GONE);
 				}
 
 				break;
 			case SD1:
-				sd1List = initSpinner(joueurTxt, cat.name(), ll, rencontre.getSd1());
+				initSpinner(sd1List, joueurTxt, cat.name(), ll, rencontre.getSd1());
 				break;
 			case SD2:
 				if (rencontre.getDivision().equals("Reg3")) {
-					sd2List = initSpinner(joueurTxt, cat.name(), ll, rencontre.getSd2());
+					sd2Panel.setVisibility(View.VISIBLE);
+					initSpinner(sd2List, joueurTxt, cat.name(), ll, rencontre.getSd2());
+				} else {
+					sd2Panel.setVisibility(View.GONE);
 				}
 				break;
 			case DH1:
-				Pair<Spinner, Spinner> spinnerPairDh1 = initDoubleSpinner(joueurTxt, cat.name(), ll, rencontre.getDh1());
-				dh1J1List = spinnerPairDh1.first;
-				dh1J2List = spinnerPairDh1.second;
+				initDoubleSpinner(dh1J1List, dh1J2List, joueurTxt, cat.name(), ll, rencontre.getDh1());
 				break;
 			case DD1:
-				Pair<Spinner, Spinner> spinnerPairDd1 = initDoubleSpinner(joueurTxt, cat.name(), ll, rencontre.getDd1());
-				dd1J1List = spinnerPairDd1.first;
-				dd1J2List = spinnerPairDd1.second;
+				initDoubleSpinner(dd1J1List, dd1J2List, joueurTxt, cat.name(), ll, rencontre.getDd1());
 				break;
 			case DX1:
-				Pair<Spinner, Spinner> spinnerPairDx1 = initDoubleSpinner(joueurTxt, cat.name(), ll, rencontre.getDx1());
-				dx1J1List = spinnerPairDx1.first;
-				dx1J2List = spinnerPairDx1.second;
+				initDoubleSpinner(dx1J1List, dx1J2List, joueurTxt, cat.name(), ll, rencontre.getDx1());
 				break;
 			case DX2:
 				if (rencontre.getDivision().equals("Reg3")) {
-					Pair<Spinner, Spinner> spinnerPairDx2 = initDoubleSpinner(joueurTxt, cat.name(), ll, rencontre.getDx2());
-					dx2J1List = spinnerPairDx2.first;
-					dx2J2List = spinnerPairDx2.second;
+					dx2Panel.setVisibility(View.VISIBLE);
+					initDoubleSpinner(dx2J1List, dx2J2List, joueurTxt, cat.name(), ll, rencontre.getDx2());
+				} else {
+					dx2Panel.setVisibility(View.GONE);
 				}
 				break;
 			default:
 				break;
 			}
 
-			container.addView(ll);
 		}
-		mainView.addView(container);
 	}
 
-	private void addCheckBox(LinearLayout container) {
-		fin = new CheckBox(getActivity());
-		live = new CheckBox(getActivity());
-		TextView finLabel = new TextView(getActivity());
-		finLabel.setText("Fin: ");
-		TextView liveLabel = new TextView(getActivity());
-		liveLabel.setText("Live: ");
+	private void initCheckBox() {
 		fin.setChecked(rencontre.getFinmatch() != null && rencontre.getFinmatch().equalsIgnoreCase("OK"));
 		live.setChecked(rencontre.getLive() == 1);
-		LinearLayout l = new LinearLayout(getActivity());
-		l.setOrientation(LinearLayout.HORIZONTAL);
-		l.addView(finLabel);
-		l.addView(fin);
-		l.addView(liveLabel);
-		l.addView(live);
-		container.addView(l);
 	}
 
-	private Spinner initSpinner(List<String> joueurTxt, String cat, LinearLayout ll, String selectedValue) {
-		TextView label = new TextView(getActivity());
-		label.setText(cat);
-		Spinner spinner = new Spinner(getActivity());
-		ArrayAdapter<String> adapter = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_spinner_dropdown_item, joueurTxt);
+	private void initSpinner(Spinner spinner, List<String> joueurTxt, String cat, LinearLayout ll, String selectedValue) {
+		ArrayAdapter<String> adapter = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_spinner_item, joueurTxt);
 		spinner.setAdapter(adapter);
 		if (selectedValue != null) {
 			int position = adapter.getPosition(selectedValue);
 			spinner.setSelection(position);
 		}
-
-		ll.addView(label);
-		ll.addView(spinner);
-		return spinner;
 	}
 
-	private Pair<Spinner, Spinner> initDoubleSpinner(List<String> joueurTxt, String cat, LinearLayout ll, String selectedValueDouble) {
-		TextView label = new TextView(getActivity());
-		label.setText(cat);
-		LinearLayout spinnerPanel = new LinearLayout(getActivity());
-		spinnerPanel.setOrientation(LinearLayout.VERTICAL);
+	private void initDoubleSpinner(Spinner spinner1, Spinner spinner2, List<String> joueurTxt, String cat, LinearLayout ll, String selectedValueDouble) {
 
-		ArrayAdapter<String> adapter1 = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_spinner_dropdown_item, joueurTxt);
-		ArrayAdapter<String> adapter2 = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_spinner_dropdown_item, joueurTxt);
+		ArrayAdapter<String> adapter1 = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_spinner_item, joueurTxt);
+		ArrayAdapter<String> adapter2 = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_spinner_item, joueurTxt);
 
-		Spinner spinner1 = new Spinner(getActivity());
 		spinner1.setAdapter(adapter1);
-		Spinner spinner2 = new Spinner(getActivity());
 		spinner2.setAdapter(adapter2);
-		spinnerPanel.addView(spinner1);
-		spinnerPanel.addView(spinner2);
 
 		if (selectedValueDouble != null) {
 			String[] split = selectedValueDouble.split(" - ");
@@ -240,8 +304,5 @@ public class EditRencontreDialogueFragment extends DialogFragment {
 			}
 		}
 
-		ll.addView(label);
-		ll.addView(spinnerPanel);
-		return Pair.create(spinner1, spinner2);
 	}
 }

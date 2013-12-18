@@ -34,7 +34,7 @@ import android.widget.Toast;
 
 import com.bretibad.tournoibretibad.R;
 import com.bretibad.tournoibretibad.fragment.EditRencontreDialogueFragment;
-import com.bretibad.tournoibretibad.fragment.EditRencontreDialogueFragment.NoticeDialogListener;
+import com.bretibad.tournoibretibad.fragment.EditRencontreDialogueFragment.NoticeEditRencontreDialogListener;
 import com.bretibad.tournoibretibad.model.Joueur;
 import com.bretibad.tournoibretibad.model.MatchCategory;
 import com.bretibad.tournoibretibad.model.Rencontre;
@@ -113,14 +113,6 @@ public class RencontreAdapter extends ArrayAdapter<Rencontre> {
 			@Override
 			public void onClick(View v) {
 				EditRencontreDialogueFragment editRencontreDialogueFragment = EditRencontreDialogueFragment.newInstance(r);
-				editRencontreDialogueFragment.mListener = new NoticeDialogListener() {
-					
-					@Override
-					public void onDialogPositiveClick(DialogFragment dialog) {
-						
-					}
-					
-				};
 				editRencontreDialogueFragment.show(((FragmentActivity) getContext()).getSupportFragmentManager(), "EditRencontre");
 			}
 		});
@@ -170,14 +162,6 @@ public class RencontreAdapter extends ArrayAdapter<Rencontre> {
 			Spinner sp = new Spinner(getContext());
 			sp.setTag("edit" + cat.name());
 			ArrayAdapter<String> adapter = new ArrayAdapter<String>(getContext(), android.R.layout.simple_spinner_dropdown_item, joueurTxt);
-
-			try {
-				Class<?> c = Class.forName(Rencontre.class.getName());
-				Method getJoueurMethod = c.getDeclaredMethod("get" + StringUtils.toCamelCase(cat.name().toLowerCase(Locale.getDefault())));
-
-			} catch (Exception e) {
-			}
-
 			sp.setAdapter(adapter);
 
 			ll.addView(t);
@@ -222,6 +206,7 @@ public class RencontreAdapter extends ArrayAdapter<Rencontre> {
 			if (displayLine) {
 				mainPanel.setVisibility(View.VISIBLE);
 				if ((r.getFinmatch() == null || !r.getFinmatch().equalsIgnoreCase("OK")) && r.getLive() == 1) {
+					mainPanel.setClickable(true);
 					mainPanel.setOnClickListener(new OnClickListener() {
 
 						@Override
@@ -230,6 +215,9 @@ public class RencontreAdapter extends ArrayAdapter<Rencontre> {
 							alertDialog.show();
 						}
 					});
+				} else {
+					mainPanel.setOnClickListener(null);
+					mainPanel.setClickable(false);
 				}
 			} else {
 				mainPanel.setVisibility(View.GONE);
@@ -305,8 +293,8 @@ public class RencontreAdapter extends ArrayAdapter<Rencontre> {
 				String setpChamps = "setp" + cat.name().toLowerCase(Locale.getDefault());
 				String setcChamps = "setc" + cat.name().toLowerCase(Locale.getDefault());
 
-				Intent updateResultatsIntent = RencontreService.getInstance(v.getContext()).getUpdateResultatsIntentNew(r.getNumequipe(),
-						r.getJournee(), setpChamps, setPvalue, setcChamps, setCvalue, new ResultReceiver(new Handler()) {
+				Intent updateResultatsIntent = RencontreService.getInstance(v.getContext()).getUpdateResultatsIntent(r.getNumequipe(), r.getJournee(),
+						setpChamps, setPvalue, setcChamps, setCvalue, new ResultReceiver(new Handler()) {
 
 							@Override
 							protected void onReceiveResult(int resultCode, Bundle resultData) {

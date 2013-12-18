@@ -6,8 +6,6 @@ import java.util.List;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.ResultReceiver;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -22,7 +20,6 @@ import android.widget.Toast;
 import com.bretibad.tournoibretibad.R;
 import com.bretibad.tournoibretibad.adpter.RencontreAdapter;
 import com.bretibad.tournoibretibad.model.Rencontre;
-import com.bretibad.tournoibretibad.service.RESTService;
 import com.bretibad.tournoibretibad.service.RencontreService;
 import com.bretibad.tournoibretibad.utils.RestResultReceiver;
 import com.google.gson.Gson;
@@ -34,6 +31,8 @@ public class EquipeFragment extends Fragment {
 	Spinner journeeSpinner;
 	ListView rencontreJourneeListView;
 	RencontreAdapter rencontreAdapter;
+	int currentEquipe;
+	int currentJournee;
 
 	RencontreEquipeResponderFragment rencontreEquipeFragment;
 
@@ -55,41 +54,11 @@ public class EquipeFragment extends Fragment {
 		adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 		// Apply the adapter to the spinner
 		equipeSpinner.setAdapter(adapter);
-		
-		//TODO: USE ARGUMENT TO SELECT Equipe and journne when call from popup
 
 		equipeSpinner.setOnItemSelectedListener(new OnItemSelectedListener() {
 			@Override
 			public void onItemSelected(final AdapterView<?> parentView, View selectedItemView, int position, long id) {
-				getActivity().setProgressBarIndeterminateVisibility(true);
-
-				Intent journeeIntent = RencontreService.getInstance(parentView.getContext()).getJourneeIntent(new RestResultReceiver() {
-
-					@Override
-					public void onRESTResult(int resultCode, String result) {
-						if (resultCode == 200) {
-							Type journeeType = new TypeToken<List<Rencontre>>() {
-							}.getType();
-							Gson gson = new Gson();
-							List<Rencontre> rencontres = gson.fromJson(result, journeeType);
-							List<String> journees = new ArrayList<String>();
-							for (Rencontre rencontre : rencontres) {
-								journees.add("J" + rencontre.getJournee());
-							}
-							ArrayAdapter<String> journeeAdapter = new ArrayAdapter<String>(parentView.getContext(),
-									android.R.layout.simple_spinner_dropdown_item, journees);
-							journeeSpinner.setVisibility(View.VISIBLE);
-							journeeSpinner.setAdapter(journeeAdapter);
-						} else {
-							Toast.makeText(parentView.getContext(), "Impossible de charger la liste des journées. Verifier votre connexion internet.",
-									Toast.LENGTH_SHORT).show();
-						}
-						getActivity().setProgressBarIndeterminateVisibility(false);
-
-					}
-				}, position + 1);
-
-				parentView.getContext().startService(journeeIntent);
+				refreshJourneeSpinner(position);
 			}
 
 			@Override
@@ -101,30 +70,7 @@ public class EquipeFragment extends Fragment {
 		journeeSpinner.setOnItemSelectedListener(new OnItemSelectedListener() {
 			@Override
 			public void onItemSelected(final AdapterView<?> parentView, View selectedItemView, int position, long id) {
-				getActivity().setProgressBarIndeterminateVisibility(true);
-
-				Intent rencontreIntent = RencontreService.getInstance(parentView.getContext()).getRencontreIntent(new RestResultReceiver() {
-					@Override
-					public void onRESTResult(int resultCode, String result) {
-						if (resultCode == 200) {
-							Type rencontreType = new TypeToken<List<Rencontre>>() {
-							}.getType();
-							Gson gson = new Gson();
-							List<Rencontre> rencontres = gson.fromJson(result, rencontreType);
-							rencontreAdapter.clear();
-							for (Rencontre r : rencontres) {
-								rencontreAdapter.add(r);
-							}
-
-						} else {
-							Toast.makeText(parentView.getContext(), "Impossible de charger la liste des rencontres. Verifier votre connexion internet.",
-									Toast.LENGTH_SHORT).show();
-						}
-						getActivity().setProgressBarIndeterminateVisibility(false);
-					}
-				}, equipeSpinner.getSelectedItemPosition() + 1, position + 1);
-
-				parentView.getContext().startService(rencontreIntent);
+				refreshRencontre(position);
 			}
 
 			@Override
@@ -134,5 +80,65 @@ public class EquipeFragment extends Fragment {
 		});
 
 		return v;
+	}
+
+	private void refreshJourneeSpinner(int selectedEquipe) {
+		getActivity().setProgressBarIndeterminateVisibility(true);
+
+		Intent journeeIntent = RencontreService.getInstance(getActivity()).getJourneeIntent(new RestResultReceiver() {
+
+			@Override
+			public void onRESTResult(int resultCode, String result) {
+				if (resultCode == 200) {
+					Type journeeType = new TypeToken<List<Rencontre>>() {
+					}.getType();
+					Gson gson = new Gson();
+					List<Rencontre> rencontres = gson.fromJson(result, journeeType);
+					List<String> journees = new ArrayList<String>();
+					for (Rencontre rencontre : rencontres) {
+						journees.add("J" + rencontre.getJournee());
+					}
+					ArrayAdapter<String> journeeAdapter = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_spinner_dropdown_item, journees);
+					journeeSpinner.setVisibility(View.VISIBLE);
+					journeeSpinner.setAdapter(journeeAdapter);
+				} else {
+					Toast.makeText(getActivity(), "Impossible de charger la liste des journées. Verifier votre connexion internet.", Toast.LENGTH_SHORT).show();
+				}
+				getActivity().setProgressBarIndeterminateVisibility(false);
+
+			}
+		}, selectedEquipe + 1);
+
+		getActivity().startService(journeeIntent);
+	}
+
+	private void refreshRencontre(int selectedJournee) {
+		getActivity().setProgressBarIndeterminateVisibility(true);
+		Intent rencontreIntent = RencontreService.getInstance(getActivity()).getRencontreIntent(new RestResultReceiver() {
+			@Override
+			public void onRESTResult(int resultCode, String result) {
+				if (resultCode == 200) {
+					Type rencontreType = new TypeToken<List<Rencontre>>() {
+					}.getType();
+					Gson gson = new Gson();
+					List<Rencontre> rencontres = gson.fromJson(result, rencontreType);
+					rencontreAdapter.clear();
+					for (Rencontre r : rencontres) {
+						rencontreAdapter.add(r);
+					}
+
+				} else {
+					Toast.makeText(getActivity(), "Impossible de charger la liste des rencontres. Verifier votre connexion internet.", Toast.LENGTH_SHORT)
+							.show();
+				}
+				getActivity().setProgressBarIndeterminateVisibility(false);
+			}
+		}, equipeSpinner.getSelectedItemPosition() + 1, selectedJournee + 1);
+
+		getActivity().startService(rencontreIntent);
+	}
+
+	public void refreshRencontre(int equipe, int journee) {
+		refreshRencontre(journee - 1);
 	}
 }

@@ -5,6 +5,7 @@ import java.util.Arrays;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.v4.app.ActionBarDrawerToggle;
+import android.support.v4.app.DialogFragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
@@ -16,6 +17,7 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
+import com.bretibad.tournoibretibad.fragment.EditRencontreDialogueFragment.NoticeEditRencontreDialogListener;
 import com.bretibad.tournoibretibad.fragment.EquipeFragment;
 import com.bretibad.tournoibretibad.fragment.JoueursResponderFragment;
 import com.bretibad.tournoibretibad.fragment.RencontreResponderFragment;
@@ -26,7 +28,7 @@ import com.parse.Parse;
 import com.parse.ParseInstallation;
 import com.parse.PushService;
 
-public class MainActivity extends FragmentActivity {
+public class MainActivity extends FragmentActivity implements NoticeEditRencontreDialogListener {
 
 	TournoisResponderFragment tournoiListFragment;
 	RencontreResponderFragment rencontreFragment;
@@ -38,7 +40,7 @@ public class MainActivity extends FragmentActivity {
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
-		//initParse();
+		// initParse();
 
 		super.onCreate(savedInstanceState);
 		requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
@@ -203,5 +205,16 @@ public class MainActivity extends FragmentActivity {
 		mDrawerLayout.closeDrawer(mDrawerList);
 		// Intent in = new Intent(MainActivity.this, NewsActivity.class);
 		// startActivity(in);
+	}
+
+	@Override
+	public void onEditRencontreDialogPositiveClick(DialogFragment dialog, int equipe, int journee) {
+		FragmentManager fm = getSupportFragmentManager();
+		FragmentTransaction ft = fm.beginTransaction();
+
+		equipeFragment = (EquipeFragment) fm.findFragmentByTag("equipeFragment");
+		if (equipeFragment != null) {
+			equipeFragment.refreshRencontre(equipe,journee);
+		}
 	}
 }

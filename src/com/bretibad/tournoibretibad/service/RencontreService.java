@@ -8,6 +8,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.ResultReceiver;
 
+import com.bretibad.tournoibretibad.model.Rencontre;
 import com.bretibad.tournoibretibad.utils.Config;
 
 public class RencontreService {
@@ -41,23 +42,7 @@ public class RencontreService {
 		return intent;
 	}
 
-	public Intent getUpdateResultatsIntent(int numEquipe, int journee, String champs, String set, ResultReceiver receiver) {
-		Intent intent = new Intent(context, RESTService.class);
-		intent.setData(Uri.parse(baseUrl + config.getProperty("updateResultats")));
-
-		Bundle params = new Bundle();
-		params.putInt("numEquipe", numEquipe);
-		params.putInt("journee", journee);
-		params.putString("champs", champs);
-		params.putString("set", set);
-
-		intent.putExtra(RESTService.EXTRA_HTTP_VERB, RESTService.POST);
-		intent.putExtra(RESTService.EXTRA_PARAMS, params);
-		intent.putExtra(RESTService.EXTRA_RESULT_RECEIVER, receiver);
-		return intent;
-	}
-
-	public Intent getUpdateResultatsIntentNew(int numEquipe, int journee, String champsSetp, String valueSetp, String champsSetc, String valueSetc,
+	public Intent getUpdateResultatsIntent(int numEquipe, int journee, String champsSetp, String valueSetp, String champsSetc, String valueSetc,
 			ResultReceiver receiver) {
 		Intent intent = new Intent(context, RESTService.class);
 		intent.setData(Uri.parse(baseUrl + config.getProperty("updateResultats")));
@@ -88,6 +73,39 @@ public class RencontreService {
 		Intent intent = new Intent(context, RESTService.class);
 		intent.setData(Uri.parse(baseUrl + config.getProperty("listJoueur")));
 
+		intent.putExtra(RESTService.EXTRA_RESULT_RECEIVER, receiver);
+		return intent;
+	}
+
+	public Intent getUpdateRencontreIntent(Rencontre r, ResultReceiver receiver) {
+		Intent intent = new Intent(context, RESTService.class);
+		intent.setData(Uri.parse(baseUrl + config.getProperty("updateRencontre")));
+
+		Bundle params = new Bundle();
+		params.putInt("numequipe", r.getNumequipe());
+		params.putInt("journee", r.getJournee());
+
+		params.putString("fintmatch", r.getFinmatch());
+		params.putInt("live", r.getLive());
+
+		params.putString("sh1", r.getSh1());
+		params.putString("sh2", r.getSh2());
+		if (!r.getDivision().equals("Reg3")) {
+			params.putString("sh3", r.getSh3());
+		}
+		params.putString("sd1", r.getSd1());
+		if (r.getDivision().equals("Reg3")) {
+			params.putString("sd2", r.getSd2());
+		}
+		params.putString("dh1", r.getDh1());
+		params.putString("dd1", r.getDd1());
+		params.putString("dx1", r.getDx1());
+		if (r.getDivision().equals("Reg3")) {
+			params.putString("dx2", r.getDx2());
+		}
+
+		intent.putExtra(RESTService.EXTRA_HTTP_VERB, RESTService.POST);
+		intent.putExtra(RESTService.EXTRA_PARAMS, params);
 		intent.putExtra(RESTService.EXTRA_RESULT_RECEIVER, receiver);
 		return intent;
 	}

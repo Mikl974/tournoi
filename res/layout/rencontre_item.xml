@@ -17,7 +17,8 @@
             android:focusable="false"
             android:textColor="@color/darkerGrey"
             android:textSize="18sp"
-            android:textStyle="italic" />
+            android:textStyle="italic"
+            android:paddingRight="25sp" />
 
         <ImageView
             android:id="@+id/rencontre_edit_icon"
