@@ -12,30 +12,39 @@ public class Rencontre implements Parcelable {
 	private String sh1;
 	private int setpsh1;
 	private int setcsh1;
+	private String finsh1;
 	private String sh2;
 	private int setpsh2;
 	private int setcsh2;
+	private String finsh2;
 	private String sh3;
 	private int setpsh3;
 	private int setcsh3;
+	private String finsh3;
 	private String sd1;
 	private int setpsd1;
 	private int setcsd1;
+	private String finsd1;
 	private String sd2;
 	private int setpsd2;
 	private int setcsd2;
+	private String finsd2;
 	private String dh1;
 	private int setpdh1;
 	private int setcdh1;
+	private String findh1;
 	private String dd1;
 	private int setpdd1;
 	private int setcdd1;
+	private String findd1;
 	private String dx1;
 	private int setpdx1;
 	private int setcdx1;
+	private String findx1;
 	private String dx2;
 	private int setpdx2;
 	private int setcdx2;
+	private String findx2;
 	private int live;
 	private Integer matchpour;
 	private Integer matchcontre;
@@ -49,30 +58,48 @@ public class Rencontre implements Parcelable {
 		sh1 = in.readString();
 		setpsh1 = in.readInt();
 		setcsh1 = in.readInt();
+		finsh1 = in.readString();
+		
 		sh2 = in.readString();
 		setpsh2 = in.readInt();
 		setcsh2 = in.readInt();
+		finsh2 = in.readString();
+		
 		sh3 = in.readString();
 		setpsh3 = in.readInt();
 		setcsh3 = in.readInt();
+		finsh3 = in.readString();
+		
 		sd1 = in.readString();
 		setpsd1 = in.readInt();
 		setcsd1 = in.readInt();
+		finsd1 = in.readString();
+		
 		sd2 = in.readString();
 		setpsd2 = in.readInt();
 		setcsd2 = in.readInt();
+		finsd2 = in.readString();
+		
 		dh1 = in.readString();
 		setpdh1 = in.readInt();
 		setcdh1 = in.readInt();
-		sh2 = in.readString();
-		setpsh2 = in.readInt();
+		findh1 = in.readString();
+		
+		dd1 = in.readString();
+		setpdd1 = in.readInt();
 		setcdd1 = in.readInt();
+		findd1 = in.readString();
+		
 		dx1 = in.readString();
 		setpdx1 = in.readInt();
 		setcdx1 = in.readInt();
+		findx1 = in.readString();
+		
 		dx2 = in.readString();
 		setpdx2 = in.readInt();
 		setcdx2 = in.readInt();
+		findx2 = in.readString();
+		
 		live = in.readInt();
 		matchpour = in.readInt();
 		matchcontre = in.readInt();
@@ -97,30 +124,39 @@ public class Rencontre implements Parcelable {
 		dest.writeString(sh1);
 		dest.writeInt(setpsh1);
 		dest.writeInt(setcsh1);
+		dest.writeString(finsh1);
 		dest.writeString(sh2);
 		dest.writeInt(setpsh2);
 		dest.writeInt(setcsh2);
+		dest.writeString(finsh2);
 		dest.writeString(sh3);
 		dest.writeInt(setpsh3);
 		dest.writeInt(setcsh3);
+		dest.writeString(finsh3);
 		dest.writeString(sd1);
 		dest.writeInt(setpsd1);
 		dest.writeInt(setcsd1);
+		dest.writeString(finsd1);
 		dest.writeString(sd2);
 		dest.writeInt(setpsd2);
 		dest.writeInt(setcsd2);
+		dest.writeString(finsd2);
 		dest.writeString(dh1);
 		dest.writeInt(setpdh1);
 		dest.writeInt(setcdh1);
+		dest.writeString(findh1);
 		dest.writeString(dd1);
 		dest.writeInt(setpdd1);
 		dest.writeInt(setcdd1);
+		dest.writeString(findd1);
 		dest.writeString(dx1);
 		dest.writeInt(setpdx1);
 		dest.writeInt(setcdx1);
+		dest.writeString(findx1);
 		dest.writeString(dx2);
 		dest.writeInt(setpdx2);
 		dest.writeInt(setcdx2);
+		dest.writeString(findx2);
 		dest.writeInt(live);
 		dest.writeInt(matchpour);
 		dest.writeInt(matchcontre);
@@ -446,5 +482,77 @@ public class Rencontre implements Parcelable {
 
 	public void setMatchcontre(Integer matchcontre) {
 		this.matchcontre = matchcontre;
+	}
+
+	public String getFinsh1() {
+		return finsh1;
+	}
+
+	public void setFinsh1(String finsh1) {
+		this.finsh1 = finsh1;
+	}
+
+	public String getFinsh2() {
+		return finsh2;
+	}
+
+	public void setFinsh2(String finsh2) {
+		this.finsh2 = finsh2;
+	}
+
+	public String getFinsh3() {
+		return finsh3;
+	}
+
+	public void setFinsh3(String finsh3) {
+		this.finsh3 = finsh3;
+	}
+
+	public String getFinsd1() {
+		return finsd1;
+	}
+
+	public void setFinsd1(String finsd1) {
+		this.finsd1 = finsd1;
+	}
+
+	public String getFinsd2() {
+		return finsd2;
+	}
+
+	public void setFinsd2(String finsd2) {
+		this.finsd2 = finsd2;
+	}
+
+	public String getFindh1() {
+		return findh1;
+	}
+
+	public void setFindh1(String findh1) {
+		this.findh1 = findh1;
+	}
+
+	public String getFindd1() {
+		return findd1;
+	}
+
+	public void setFindd1(String findd1) {
+		this.findd1 = findd1;
+	}
+
+	public String getFindx1() {
+		return findx1;
+	}
+
+	public void setFindx1(String findx1) {
+		this.findx1 = findx1;
+	}
+
+	public String getFindx2() {
+		return findx2;
+	}
+
+	public void setFindx2(String findx2) {
+		this.findx2 = findx2;
 	}
 }

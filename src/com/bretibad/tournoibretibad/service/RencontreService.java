@@ -43,7 +43,7 @@ public class RencontreService {
 	}
 
 	public Intent getUpdateResultatsIntent(int numEquipe, int journee, String champsSetp, String valueSetp, String champsSetc, String valueSetc,
-			ResultReceiver receiver) {
+			String finMatchChamps, String valueFinMatch, ResultReceiver receiver) {
 		Intent intent = new Intent(context, RESTService.class);
 		intent.setData(Uri.parse(baseUrl + config.getProperty("updateResultats")));
 

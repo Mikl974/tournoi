@@ -7,6 +7,7 @@ import java.util.List;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentActivity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -31,10 +32,17 @@ public class EquipeFragment extends Fragment {
 	Spinner journeeSpinner;
 	ListView rencontreJourneeListView;
 	RencontreAdapter rencontreAdapter;
-	int currentEquipe;
-	int currentJournee;
+	int currentEquipe = 0;
+	int currentJournee = 0;
 
 	RencontreEquipeResponderFragment rencontreEquipeFragment;
+
+	@Override
+	public void onSaveInstanceState(Bundle outState) {
+		outState.putInt("currentEquipe", currentEquipe);
+		outState.putInt("currentJournee", currentJournee);
+		super.onSaveInstanceState(outState);
+	}
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -55,9 +63,14 @@ public class EquipeFragment extends Fragment {
 		// Apply the adapter to the spinner
 		equipeSpinner.setAdapter(adapter);
 
+		currentEquipe = savedInstanceState != null ? savedInstanceState.getInt("currentEquipe", 0) : 0;
+		currentJournee = savedInstanceState != null ? savedInstanceState.getInt("currentJournee", 0) : 0;
+		equipeSpinner.setSelection(currentEquipe);
+
 		equipeSpinner.setOnItemSelectedListener(new OnItemSelectedListener() {
 			@Override
 			public void onItemSelected(final AdapterView<?> parentView, View selectedItemView, int position, long id) {
+				currentEquipe = position;
 				refreshJourneeSpinner(position);
 			}
 
@@ -70,6 +83,7 @@ public class EquipeFragment extends Fragment {
 		journeeSpinner.setOnItemSelectedListener(new OnItemSelectedListener() {
 			@Override
 			public void onItemSelected(final AdapterView<?> parentView, View selectedItemView, int position, long id) {
+				currentJournee = position;
 				refreshRencontre(position);
 			}
 
@@ -83,9 +97,10 @@ public class EquipeFragment extends Fragment {
 	}
 
 	private void refreshJourneeSpinner(int selectedEquipe) {
-		getActivity().setProgressBarIndeterminateVisibility(true);
+		final FragmentActivity currentActivity = getActivity();
+		currentActivity.setProgressBarIndeterminateVisibility(true);
 
-		Intent journeeIntent = RencontreService.getInstance(getActivity()).getJourneeIntent(new RestResultReceiver() {
+		Intent journeeIntent = RencontreService.getInstance(currentActivity).getJourneeIntent(new RestResultReceiver() {
 
 			@Override
 			public void onRESTResult(int resultCode, String result) {
@@ -98,23 +113,27 @@ public class EquipeFragment extends Fragment {
 					for (Rencontre rencontre : rencontres) {
 						journees.add("J" + rencontre.getJournee());
 					}
-					ArrayAdapter<String> journeeAdapter = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_spinner_dropdown_item, journees);
+					ArrayAdapter<String> journeeAdapter = new ArrayAdapter<String>(currentActivity, android.R.layout.simple_spinner_dropdown_item, journees);
 					journeeSpinner.setVisibility(View.VISIBLE);
 					journeeSpinner.setAdapter(journeeAdapter);
+					journeeSpinner.setSelection(currentJournee);
+
 				} else {
-					Toast.makeText(getActivity(), "Impossible de charger la liste des journées. Verifier votre connexion internet.", Toast.LENGTH_SHORT).show();
+					Toast.makeText(currentActivity, "Impossible de charger la liste des journées. Verifier votre connexion internet.", Toast.LENGTH_SHORT)
+							.show();
 				}
-				getActivity().setProgressBarIndeterminateVisibility(false);
+				currentActivity.setProgressBarIndeterminateVisibility(false);
 
 			}
 		}, selectedEquipe + 1);
 
-		getActivity().startService(journeeIntent);
+		currentActivity.startService(journeeIntent);
 	}
 
 	private void refreshRencontre(int selectedJournee) {
-		getActivity().setProgressBarIndeterminateVisibility(true);
-		Intent rencontreIntent = RencontreService.getInstance(getActivity()).getRencontreIntent(new RestResultReceiver() {
+		final FragmentActivity currentActivity = getActivity();
+		currentActivity.setProgressBarIndeterminateVisibility(true);
+		Intent rencontreIntent = RencontreService.getInstance(currentActivity).getRencontreIntent(new RestResultReceiver() {
 			@Override
 			public void onRESTResult(int resultCode, String result) {
 				if (resultCode == 200) {
@@ -128,14 +147,14 @@ public class EquipeFragment extends Fragment {
 					}
 
 				} else {
-					Toast.makeText(getActivity(), "Impossible de charger la liste des rencontres. Verifier votre connexion internet.", Toast.LENGTH_SHORT)
+					Toast.makeText(currentActivity, "Impossible de charger la liste des rencontres. Verifier votre connexion internet.", Toast.LENGTH_SHORT)
 							.show();
 				}
-				getActivity().setProgressBarIndeterminateVisibility(false);
+				currentActivity.setProgressBarIndeterminateVisibility(false);
 			}
 		}, equipeSpinner.getSelectedItemPosition() + 1, selectedJournee + 1);
 
-		getActivity().startService(rencontreIntent);
+		currentActivity.startService(rencontreIntent);
 	}
 
 	public void refreshRencontre(int equipe, int journee) {

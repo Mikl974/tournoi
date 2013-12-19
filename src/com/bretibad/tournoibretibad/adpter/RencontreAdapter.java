@@ -3,6 +3,7 @@ package com.bretibad.tournoibretibad.adpter;
 import java.lang.reflect.Method;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Locale;
 
@@ -231,8 +232,12 @@ public class RencontreAdapter extends ArrayAdapter<Rencontre> {
 	private Builder getMatchScorePopup(final View v, final Rencontre r, final TextView scoreTextVIew, final MatchCategory cat) {
 		AlertDialog.Builder alert = new AlertDialog.Builder(v.getContext());
 
-		final EditText setp = getEditText(v);
-		final EditText setc = getEditText(v);
+		final Spinner setp = getSpinnerScore(v);
+		final Spinner setc = getSpinnerScore(v);
+
+		ArrayAdapter<String> scoreAdapter = new ArrayAdapter<String>(getContext(), android.R.layout.simple_spinner_dropdown_item, Arrays.asList("", "OK",
+				"WOP", "WOC", "ABP", "ABC"));
+		final Spinner finMatch = getSpinnerFinMatch(v, scoreAdapter);
 
 		try {
 			Class<?> c = Class.forName(Rencontre.class.getName());
@@ -244,9 +249,14 @@ public class RencontreAdapter extends ArrayAdapter<Rencontre> {
 			int setpValue = (Integer) getSetpMethod.invoke(r);
 			Method getSetcMethod = c.getDeclaredMethod("getSetc" + cat.name().toLowerCase(Locale.getDefault()));
 			int setcValue = (Integer) getSetcMethod.invoke(r);
+			Method getFinMatchMethod = c.getDeclaredMethod("getFin" + cat.name().toLowerCase(Locale.getDefault()));
+			String finMatchValue = (String) getFinMatchMethod.invoke(r);
 
-			setp.setText(setpValue + "");
-			setc.setText(setcValue + "");
+			// setp.setText(setpValue + "");
+			// setc.setText(setcValue + "");
+			setp.setSelection(setpValue);
+			setc.setSelection(setcValue);
+			finMatch.setSelection(scoreAdapter.getPosition(finMatchValue));
 
 		} catch (Exception e) {
 
@@ -274,7 +284,7 @@ public class RencontreAdapter extends ArrayAdapter<Rencontre> {
 
 		alert.setView(l);
 
-		alert.setPositiveButton("Ok", getSaveMatchListener(v, r, scoreTextVIew, cat, setp, setc));
+		alert.setPositiveButton("Ok", getSaveMatchListener(v, r, scoreTextVIew, cat, setp, setc, finMatch));
 
 		alert.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
 			public void onClick(DialogInterface dialog, int whichButton) {
@@ -284,17 +294,21 @@ public class RencontreAdapter extends ArrayAdapter<Rencontre> {
 	}
 
 	private android.content.DialogInterface.OnClickListener getSaveMatchListener(final View v, final Rencontre r, final TextView scoreTextVIew,
-			final MatchCategory cat, final EditText setp, final EditText setc) {
+			final MatchCategory cat, final Spinner setp, final Spinner setc, final Spinner finMatch) {
 		return new DialogInterface.OnClickListener() {
 			public void onClick(DialogInterface dialog, int whichButton) {
-				final String setPvalue = setp.getText().toString();
-				final String setCvalue = setc.getText().toString();
+				// final String setPvalue = setp.getText().toString();
+				// final String setCvalue = setc.getText().toString();
+				final String setPvalue = setp.getSelectedItemPosition() + "";
+				final String setCvalue = setc.getSelectedItemPosition() + "";
+				final String finMatchvalue = (String) finMatch.getSelectedItem();
 
 				String setpChamps = "setp" + cat.name().toLowerCase(Locale.getDefault());
 				String setcChamps = "setc" + cat.name().toLowerCase(Locale.getDefault());
+				String finMatchChamps = "fin" + cat.name().toLowerCase(Locale.getDefault());
 
 				Intent updateResultatsIntent = RencontreService.getInstance(v.getContext()).getUpdateResultatsIntent(r.getNumequipe(), r.getJournee(),
-						setpChamps, setPvalue, setcChamps, setCvalue, new ResultReceiver(new Handler()) {
+						setpChamps, setPvalue, setcChamps, setCvalue, finMatchChamps, finMatchvalue, new ResultReceiver(new Handler()) {
 
 							@Override
 							protected void onReceiveResult(int resultCode, Bundle resultData) {
@@ -306,7 +320,7 @@ public class RencontreAdapter extends ArrayAdapter<Rencontre> {
 										setSetpMethod.invoke(r, Integer.parseInt(setPvalue));
 										Method setSetcMethod = c.getDeclaredMethod("setSetc" + cat.name().toLowerCase(Locale.getDefault()), int.class);
 										setSetcMethod.invoke(r, Integer.parseInt(setCvalue));
-
+										
 										scoreTextVIew.setText(setPvalue + " / " + setCvalue);
 										Toast.makeText(v.getContext(), "Valeur sauvée", Toast.LENGTH_SHORT).show();
 									} catch (Exception e) {
@@ -323,12 +337,17 @@ public class RencontreAdapter extends ArrayAdapter<Rencontre> {
 		};
 	}
 
-	public EditText getEditText(View v) {
-		final EditText editText = new EditText(v.getContext());
-		editText.setInputType(InputType.TYPE_CLASS_NUMBER);
-		editText.setKeyListener(DigitsKeyListener.getInstance("012"));
-		editText.setFilters(new InputFilter[] { new InputFilter.LengthFilter(1) });
+	public Spinner getSpinnerScore(View v) {
+		final Spinner editText = new Spinner(v.getContext());
+		ArrayAdapter<Integer> scoreAdapter = new ArrayAdapter<Integer>(getContext(), android.R.layout.simple_spinner_dropdown_item, Arrays.asList(0, 1, 2));
+		editText.setAdapter(scoreAdapter);
 		return editText;
+	}
+
+	private Spinner getSpinnerFinMatch(View v, ArrayAdapter<String> scoreAdapter) {
+		final Spinner spinner = new Spinner(v.getContext());
+		spinner.setAdapter(scoreAdapter);
+		return spinner;
 	}
 
 	private void initAllWidget(View convertView, final ViewHolder holder) {
