@@ -1,7 +1,9 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    android:orientation="vertical" >
+    android:orientation="vertical"
+    android:paddingLeft="5sp"
+    android:paddingRight="5sp" >
 
     <LinearLayout
         android:id="@+id/rencontre_title_panel"
@@ -15,10 +17,20 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:focusable="false"
+            android:paddingRight="25sp"
             android:textColor="@color/darkerGrey"
             android:textSize="18sp"
-            android:textStyle="italic"
-            android:paddingRight="25sp" />
+            android:textStyle="italic" />
+
+        <TextView
+            android:id="@+id/rencontre_score"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:focusable="false"
+            android:paddingRight="25sp"
+            android:textColor="@color/darkerGrey"
+            android:textSize="18sp"
+            android:textStyle="italic" />
 
         <ImageView
             android:id="@+id/rencontre_edit_icon"

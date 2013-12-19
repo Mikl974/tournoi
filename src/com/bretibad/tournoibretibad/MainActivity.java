@@ -203,14 +203,11 @@ public class MainActivity extends FragmentActivity implements NoticeEditRencontr
 		mDrawerList.setItemChecked(position, true);
 		mDrawerList.setSelection(position);
 		mDrawerLayout.closeDrawer(mDrawerList);
-		// Intent in = new Intent(MainActivity.this, NewsActivity.class);
-		// startActivity(in);
 	}
 
 	@Override
 	public void onEditRencontreDialogPositiveClick(DialogFragment dialog, int equipe, int journee) {
 		FragmentManager fm = getSupportFragmentManager();
-		FragmentTransaction ft = fm.beginTransaction();
 
 		equipeFragment = (EquipeFragment) fm.findFragmentByTag("equipeFragment");
 		if (equipeFragment != null) {

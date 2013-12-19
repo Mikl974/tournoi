@@ -1,8 +1,6 @@
 package com.bretibad.tournoibretibad.adpter;
 
 import java.lang.reflect.Method;
-import java.lang.reflect.Type;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Locale;
@@ -15,35 +13,24 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.ResultReceiver;
-import android.support.v4.app.DialogFragment;
 import android.support.v4.app.FragmentActivity;
-import android.text.InputFilter;
-import android.text.InputType;
-import android.text.method.DigitsKeyListener;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
-import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.ScrollView;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bretibad.tournoibretibad.R;
 import com.bretibad.tournoibretibad.fragment.EditRencontreDialogueFragment;
-import com.bretibad.tournoibretibad.fragment.EditRencontreDialogueFragment.NoticeEditRencontreDialogListener;
-import com.bretibad.tournoibretibad.model.Joueur;
 import com.bretibad.tournoibretibad.model.MatchCategory;
 import com.bretibad.tournoibretibad.model.Rencontre;
 import com.bretibad.tournoibretibad.service.RencontreService;
-import com.bretibad.tournoibretibad.utils.RestResultReceiver;
 import com.bretibad.tournoibretibad.utils.StringUtils;
-import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
 
 public class RencontreAdapter extends ArrayAdapter<Rencontre> {
 
@@ -93,6 +80,13 @@ public class RencontreAdapter extends ArrayAdapter<Rencontre> {
 
 		Rencontre r = dtos.get(position);
 		holder.title.setText("Equipe " + r.getNumequipe() + " - " + r.getAdversaire());
+
+		if (r.getFinmatch() != null && r.getFinmatch().equalsIgnoreCase("ok")) {
+			holder.rencontreScore.setText(r.getMatchpour() + " / " + r.getMatchcontre());
+		} else {
+			holder.rencontreScore.setText("");
+		}
+
 		initEditRencontreIcon(holder.editRencontreIcon, r);
 
 		initMatchLine(MatchCategory.SH1, r, holder.sh1Panel, holder.sh1, holder.scoreSh1, true);
@@ -119,76 +113,6 @@ public class RencontreAdapter extends ArrayAdapter<Rencontre> {
 		});
 	}
 
-	protected Builder getEditRencontrePopup(final View v, final Rencontre r) {
-		final AlertDialog.Builder alert = new AlertDialog.Builder(v.getContext());
-
-		Intent listJoueurIntent = RencontreService.getInstance(v.getContext()).getListJoueurIntent(new RestResultReceiver() {
-
-			@Override
-			public void onRESTResult(int resultCode, String result) {
-				if (resultCode == 200) {
-					Type joueurType = new TypeToken<List<Joueur>>() {
-					}.getType();
-					Gson gson = new Gson();
-					List<Joueur> joueurs = gson.fromJson(result, joueurType);
-					List<String> joueurTxt = new ArrayList<String>();
-					for (Joueur j : joueurs) {
-						joueurTxt.add(j.getNom() + " " + j.getPrenom());
-					}
-
-					fillEditRencontrePopup(alert, v, r, joueurTxt);
-					alert.show();
-
-				} else {
-					Toast.makeText(v.getContext(), "Erreur: Impossible de récupérer la liste de joueurs", Toast.LENGTH_SHORT).show();
-				}
-			}
-		});
-		getContext().startService(listJoueurIntent);
-
-		return alert;
-	}
-
-	protected void fillEditRencontrePopup(Builder alert, View v, Rencontre r, List<String> joueurTxt) {
-		ScrollView sv = new ScrollView(getContext());
-		LinearLayout container = new LinearLayout(v.getContext());
-		container.setOrientation(LinearLayout.VERTICAL);
-
-		for (MatchCategory cat : MatchCategory.values()) {
-			LinearLayout ll = new LinearLayout(getContext());
-			ll.setOrientation(LinearLayout.HORIZONTAL);
-			TextView t = new TextView(v.getContext());
-			t.setText(cat.name());
-
-			Spinner sp = new Spinner(getContext());
-			sp.setTag("edit" + cat.name());
-			ArrayAdapter<String> adapter = new ArrayAdapter<String>(getContext(), android.R.layout.simple_spinner_dropdown_item, joueurTxt);
-			sp.setAdapter(adapter);
-
-			ll.addView(t);
-			ll.addView(sp);
-
-			container.addView(ll);
-		}
-		sv.addView(container);
-		alert.setView(sv);
-	}
-
-	public View getMatchCategoryEditLine(MatchCategory cat, Rencontre r, List<String> joueurTxt) {
-		LinearLayout ll = new LinearLayout(getContext());
-		ll.setOrientation(LinearLayout.HORIZONTAL);
-		TextView t = new TextView(getContext());
-		t.setText(cat.name());
-
-		Spinner sp = new Spinner(getContext());
-		ArrayAdapter<String> adapter = new ArrayAdapter<String>(getContext(), android.R.layout.simple_spinner_dropdown_item, joueurTxt);
-		sp.setAdapter(adapter);
-
-		ll.addView(t);
-		ll.addView(sp);
-		return ll;
-	}
-
 	private void initMatchLine(final MatchCategory cat, final Rencontre r, LinearLayout mainPanel, TextView joueurPanel, final TextView scorePanel,
 			boolean displayLine) {
 
@@ -197,12 +121,15 @@ public class RencontreAdapter extends ArrayAdapter<Rencontre> {
 			Method getJoueurMethod = c.getDeclaredMethod("get" + StringUtils.toCamelCase(cat.name().toLowerCase(Locale.getDefault())));
 			Method getSetpMethod = c.getDeclaredMethod("getSetp" + cat.name().toLowerCase(Locale.getDefault()));
 			Method getSetcMethod = c.getDeclaredMethod("getSetc" + cat.name().toLowerCase(Locale.getDefault()));
+			Method getFinMatchMethod = c.getDeclaredMethod("getFin" + cat.name().toLowerCase(Locale.getDefault()));
 
 			String joueur = (String) getJoueurMethod.invoke(r);
 			int setpValue = (Integer) getSetpMethod.invoke(r);
 			int setcValue = (Integer) getSetcMethod.invoke(r);
+			String finMatch = (String) getFinMatchMethod.invoke(r);
 			joueurPanel.setText(cat.name() + ": " + joueur);
-			scorePanel.setText(setpValue + " / " + setcValue);
+
+			updateScorePanel(scorePanel, setpValue, setcValue, finMatch);
 
 			if (displayLine) {
 				mainPanel.setVisibility(View.VISIBLE);
@@ -229,13 +156,27 @@ public class RencontreAdapter extends ArrayAdapter<Rencontre> {
 		}
 	}
 
+	private void updateScorePanel(final TextView scorePanel, int setpValue, int setcValue, String finMatch) {
+		scorePanel.setText(setpValue + " / " + setcValue);
+		scorePanel.setTextColor(getContext().getResources().getColor(R.color.darkBlue));
+		if (finMatch != null && finMatch.equalsIgnoreCase("ok")) {
+			if (setpValue == setcValue) {
+				scorePanel.setTextColor(getContext().getResources().getColor(R.color.orange));
+			} else if (setpValue > setcValue) {
+				scorePanel.setTextColor(getContext().getResources().getColor(R.color.green));
+			} else if (setpValue < setcValue) {
+				scorePanel.setTextColor(getContext().getResources().getColor(R.color.red));
+			}
+		}
+	}
+
 	private Builder getMatchScorePopup(final View v, final Rencontre r, final TextView scoreTextVIew, final MatchCategory cat) {
 		AlertDialog.Builder alert = new AlertDialog.Builder(v.getContext());
 
 		final Spinner setp = getSpinnerScore(v);
 		final Spinner setc = getSpinnerScore(v);
 
-		ArrayAdapter<String> scoreAdapter = new ArrayAdapter<String>(getContext(), android.R.layout.simple_spinner_dropdown_item, Arrays.asList("",
+		ArrayAdapter<String> scoreAdapter = new ArrayAdapter<String>(getContext(), android.R.layout.simple_spinner_item, Arrays.asList("",
 				"OK", "WOP", "WOC", "ABP", "ABC"));
 		final Spinner finMatch = getSpinnerFinMatch(v, scoreAdapter);
 
@@ -262,7 +203,6 @@ public class RencontreAdapter extends ArrayAdapter<Rencontre> {
 
 		}
 
-		
 		LinearLayout scoreLayout = new LinearLayout(getContext());
 		scoreLayout.setOrientation(LinearLayout.HORIZONTAL);
 		scoreLayout.setPadding(15, 0, 0, 0);
@@ -289,7 +229,7 @@ public class RencontreAdapter extends ArrayAdapter<Rencontre> {
 		finText.setText("Fini: ");
 		finLayout.addView(finText);
 		finLayout.addView(finMatch);
-		
+
 		LinearLayout mainLayout = new LinearLayout(getContext());
 		mainLayout.setOrientation(LinearLayout.VERTICAL);
 		mainLayout.addView(scoreLayout);
@@ -327,16 +267,19 @@ public class RencontreAdapter extends ArrayAdapter<Rencontre> {
 							protected void onReceiveResult(int resultCode, Bundle resultData) {
 								if (resultCode == 200) {
 
+									Toast.makeText(v.getContext(), "Valeur sauvée", Toast.LENGTH_SHORT).show();
 									try {
 										Class<?> c = Class.forName(Rencontre.class.getName());
 										Method setSetpMethod = c.getDeclaredMethod("setSetp" + cat.name().toLowerCase(Locale.getDefault()), int.class);
 										setSetpMethod.invoke(r, Integer.parseInt(setPvalue));
 										Method setSetcMethod = c.getDeclaredMethod("setSetc" + cat.name().toLowerCase(Locale.getDefault()), int.class);
 										setSetcMethod.invoke(r, Integer.parseInt(setCvalue));
-										Method setFinMatchMethod = c.getDeclaredMethod("setFin" + cat.name().toLowerCase(Locale.getDefault()), String.class);
+										Method setFinMatchMethod = c.getDeclaredMethod("setFin" + cat.name().toLowerCase(Locale.getDefault()),
+												String.class);
 										setFinMatchMethod.invoke(r, finMatchvalue);
 
-										scoreTextVIew.setText(setPvalue + " / " + setCvalue);
+										updateScorePanel(scoreTextVIew, setp.getSelectedItemPosition(), setc.getSelectedItemPosition(), finMatchvalue);
+
 										Toast.makeText(v.getContext(), "Valeur sauvée", Toast.LENGTH_SHORT).show();
 									} catch (Exception e) {
 										e.printStackTrace();
@@ -354,7 +297,7 @@ public class RencontreAdapter extends ArrayAdapter<Rencontre> {
 
 	public Spinner getSpinnerScore(View v) {
 		final Spinner editText = new Spinner(v.getContext());
-		ArrayAdapter<Integer> scoreAdapter = new ArrayAdapter<Integer>(getContext(), android.R.layout.simple_spinner_dropdown_item, Arrays.asList(0,
+		ArrayAdapter<Integer> scoreAdapter = new ArrayAdapter<Integer>(getContext(), android.R.layout.simple_spinner_item, Arrays.asList(0,
 				1, 2));
 		editText.setAdapter(scoreAdapter);
 		return editText;
@@ -368,6 +311,7 @@ public class RencontreAdapter extends ArrayAdapter<Rencontre> {
 
 	private void initAllWidget(View convertView, final ViewHolder holder) {
 		holder.title = (TextView) convertView.findViewById(R.id.rencontre_title);
+		holder.rencontreScore = (TextView) convertView.findViewById(R.id.rencontre_score);
 		holder.editRencontreIcon = (ImageView) convertView.findViewById(R.id.rencontre_edit_icon);
 
 		holder.sh1Panel = (LinearLayout) convertView.findViewById(R.id.sh1Panel);
@@ -410,6 +354,7 @@ public class RencontreAdapter extends ArrayAdapter<Rencontre> {
 
 	private class ViewHolder {
 		TextView title;
+		TextView rencontreScore;
 		ImageView editRencontreIcon;
 
 		LinearLayout sh1Panel;

@@ -44,10 +44,6 @@ public class RencontreResponderFragment extends RESTResponderFragment {
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		getActivity().setProgressBarIndeterminateVisibility(true);
-		if (savedInstanceState != null) {
-			// rencontres =
-			// savedInstanceState.getParcelableArrayList("rencontres");
-		}
 	}
 
 	@Override
@@ -60,7 +56,9 @@ public class RencontreResponderFragment extends RESTResponderFragment {
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		View v = inflater.inflate(R.layout.rencontre_list, container, false);
 		adapter = new RencontreAdapter(getActivity(), R.layout.rencontre_list, new ArrayList<Rencontre>());
-		listView = (ListView) v.findViewById(R.id.rencontres_listview);
+		// listView = (ListView) v.findViewById(R.id.rencontres_listview);
+		listView = (ListView) v.findViewById(android.R.id.list);
+		listView.setEmptyView(v.findViewById(android.R.id.empty));
 		listView.setAdapter(adapter);
 		return v;
 	}
@@ -88,7 +86,7 @@ public class RencontreResponderFragment extends RESTResponderFragment {
 			Gson gson = new Gson();
 			List<Rencontre> rencontres = gson.fromJson(result, rencontreType);
 
-			this.rencontres = rencontres;
+			this.rencontres = rencontres!=null? rencontres: new ArrayList<Rencontre>();
 			setRencontres();
 		} else {
 			Activity activity = getActivity();

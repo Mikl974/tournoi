@@ -9,7 +9,7 @@
     android:padding="5dip" >
 
     <ListView
-        android:id="@+id/rencontres_listview"
+        android:id="@android:id/list"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_gravity="start"
@@ -18,5 +18,13 @@
         android:divider="@color/lineSeparator"
         android:dividerHeight="1dp" 
         android:listSelector="@android:color/transparent"/>
+    
+    <TextView 
+        android:id="@id/android:empty" 
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent" 
+        android:gravity="center_vertical|center_horizontal"
+        android:textStyle="bold"
+        android:text="Pas de rencontre live" />
 
 </RelativeLayout>

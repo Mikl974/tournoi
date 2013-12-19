@@ -9,5 +9,8 @@
     <color name="lightGrey">#A2A2A2</color>
     <color name="darkerGrey">#58585B</color>
     <color name="pressRow">#b2b2b2</color>
+    <color name="red">#ff0000</color>
+    <color name="green">#008000</color>
+    <color name="orange">#FFA500</color>
 
 </resources>

@@ -43,6 +43,12 @@ public class EquipeFragment extends Fragment {
 		outState.putInt("currentJournee", currentJournee);
 		super.onSaveInstanceState(outState);
 	}
+	
+	@Override
+	public void onResume() {
+		super.onResume();
+		getActivity().setTitle(R.string.resultatsEquipes);
+	}
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -57,9 +63,9 @@ public class EquipeFragment extends Fragment {
 
 		// Create an ArrayAdapter using the string array and a default spinner
 		// layout
-		ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(v.getContext(), R.array.equipes, android.R.layout.simple_spinner_dropdown_item);
+		ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(v.getContext(), R.array.equipes, android.R.layout.simple_spinner_item);
 		// Specify the layout to use when the list of choices appears
-		adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+		adapter.setDropDownViewResource(android.R.layout.simple_spinner_item);
 		// Apply the adapter to the spinner
 		equipeSpinner.setAdapter(adapter);
 
@@ -113,7 +119,7 @@ public class EquipeFragment extends Fragment {
 					for (Rencontre rencontre : rencontres) {
 						journees.add("J" + rencontre.getJournee());
 					}
-					ArrayAdapter<String> journeeAdapter = new ArrayAdapter<String>(currentActivity, android.R.layout.simple_spinner_dropdown_item, journees);
+					ArrayAdapter<String> journeeAdapter = new ArrayAdapter<String>(currentActivity, android.R.layout.simple_spinner_item, journees);
 					journeeSpinner.setVisibility(View.VISIBLE);
 					journeeSpinner.setAdapter(journeeAdapter);
 					journeeSpinner.setSelection(currentJournee);

@@ -287,7 +287,7 @@ public class EditRencontreDialogueFragment extends DialogFragment {
 	}
 
 	private void initScore() {
-		ArrayAdapter<String> scoreAdapter = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_spinner_dropdown_item, Arrays.asList("", "0", "1",
+		ArrayAdapter<String> scoreAdapter = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_spinner_item, Arrays.asList("", "0", "1",
 				"2", "3", "4", "5", "6", "7", "8"));
 		scorep.setAdapter(scoreAdapter);
 		scorec.setAdapter(scoreAdapter);

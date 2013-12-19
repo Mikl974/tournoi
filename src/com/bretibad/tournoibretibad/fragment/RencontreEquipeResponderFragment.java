@@ -62,7 +62,9 @@ public class RencontreEquipeResponderFragment extends RESTResponderFragment {
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		View v = inflater.inflate(R.layout.rencontre_list, container, false);
 		adapter = new RencontreAdapter(getActivity(), R.layout.rencontre_list, new ArrayList<Rencontre>());
-		listView = (ListView) v.findViewById(R.id.rencontres_listview);
+		// listView = (ListView) v.findViewById(R.id.rencontres_listview);
+		listView = (ListView) v.findViewById(android.R.id.list);
+		listView.setEmptyView(v.findViewById(android.R.id.empty));
 		listView.setAdapter(adapter);
 		return v;
 	}
