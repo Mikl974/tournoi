@@ -172,7 +172,7 @@ public class EditRencontreDialogueFragment extends DialogFragment {
 		rencontre.setSh1((String) sh1List.getSelectedItem());
 		rencontre.setSh2((String) sh2List.getSelectedItem());
 		if (sh3List != null) {
-			rencontre.setSh2((String) sh2List.getSelectedItem());
+			rencontre.setSh3((String) sh3List.getSelectedItem());
 		}
 		rencontre.setSd1((String) sd1List.getSelectedItem());
 		if (sd2List != null) {

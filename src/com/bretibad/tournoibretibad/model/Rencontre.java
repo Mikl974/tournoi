@@ -59,47 +59,47 @@ public class Rencontre implements Parcelable {
 		setpsh1 = in.readInt();
 		setcsh1 = in.readInt();
 		finsh1 = in.readString();
-		
+
 		sh2 = in.readString();
 		setpsh2 = in.readInt();
 		setcsh2 = in.readInt();
 		finsh2 = in.readString();
-		
+
 		sh3 = in.readString();
 		setpsh3 = in.readInt();
 		setcsh3 = in.readInt();
 		finsh3 = in.readString();
-		
+
 		sd1 = in.readString();
 		setpsd1 = in.readInt();
 		setcsd1 = in.readInt();
 		finsd1 = in.readString();
-		
+
 		sd2 = in.readString();
 		setpsd2 = in.readInt();
 		setcsd2 = in.readInt();
 		finsd2 = in.readString();
-		
+
 		dh1 = in.readString();
 		setpdh1 = in.readInt();
 		setcdh1 = in.readInt();
 		findh1 = in.readString();
-		
+
 		dd1 = in.readString();
 		setpdd1 = in.readInt();
 		setcdd1 = in.readInt();
 		findd1 = in.readString();
-		
+
 		dx1 = in.readString();
 		setpdx1 = in.readInt();
 		setcdx1 = in.readInt();
 		findx1 = in.readString();
-		
+
 		dx2 = in.readString();
 		setpdx2 = in.readInt();
 		setcdx2 = in.readInt();
 		findx2 = in.readString();
-		
+
 		live = in.readInt();
 		matchpour = in.readInt();
 		matchcontre = in.readInt();
@@ -158,8 +158,8 @@ public class Rencontre implements Parcelable {
 		dest.writeInt(setcdx2);
 		dest.writeString(findx2);
 		dest.writeInt(live);
-		dest.writeInt(matchpour);
-		dest.writeInt(matchcontre);
+		dest.writeInt(matchpour != null ? matchpour : 0);
+		dest.writeInt(matchcontre != null ? matchcontre : 0);
 		dest.writeString(finmatch);
 	}
 

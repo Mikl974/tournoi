@@ -235,8 +235,8 @@ public class RencontreAdapter extends ArrayAdapter<Rencontre> {
 		final Spinner setp = getSpinnerScore(v);
 		final Spinner setc = getSpinnerScore(v);
 
-		ArrayAdapter<String> scoreAdapter = new ArrayAdapter<String>(getContext(), android.R.layout.simple_spinner_dropdown_item, Arrays.asList("", "OK",
-				"WOP", "WOC", "ABP", "ABC"));
+		ArrayAdapter<String> scoreAdapter = new ArrayAdapter<String>(getContext(), android.R.layout.simple_spinner_dropdown_item, Arrays.asList("",
+				"OK", "WOP", "WOC", "ABP", "ABC"));
 		final Spinner finMatch = getSpinnerFinMatch(v, scoreAdapter);
 
 		try {
@@ -262,27 +262,39 @@ public class RencontreAdapter extends ArrayAdapter<Rencontre> {
 
 		}
 
-		LinearLayout l = new LinearLayout(v.getContext());
-		l.setOrientation(LinearLayout.HORIZONTAL);
-		l.setPadding(15, 0, 0, 0);
+		
+		LinearLayout scoreLayout = new LinearLayout(getContext());
+		scoreLayout.setOrientation(LinearLayout.HORIZONTAL);
+		scoreLayout.setPadding(15, 0, 0, 0);
 
-		LinearLayout setpLayout = new LinearLayout(v.getContext());
+		LinearLayout setpLayout = new LinearLayout(getContext());
 		setpLayout.setPadding(0, 0, 50, 0);
 		TextView setpText = new TextView(v.getContext());
 		setpText.setText("Set pour: ");
 		setpLayout.addView(setpText);
 		setpLayout.addView(setp);
 
-		LinearLayout setcLayout = new LinearLayout(v.getContext());
-		TextView setcText = new TextView(v.getContext());
+		LinearLayout setcLayout = new LinearLayout(getContext());
+		TextView setcText = new TextView(getContext());
 		setcText.setText("Set contre: ");
 		setcLayout.addView(setcText);
 		setcLayout.addView(setc);
 
-		l.addView(setpLayout);
-		l.addView(setcLayout);
+		scoreLayout.addView(setpLayout);
+		scoreLayout.addView(setcLayout);
 
-		alert.setView(l);
+		LinearLayout finLayout = new LinearLayout(getContext());
+		finLayout.setOrientation(LinearLayout.HORIZONTAL);
+		TextView finText = new TextView(getContext());
+		finText.setText("Fini: ");
+		finLayout.addView(finText);
+		finLayout.addView(finMatch);
+		
+		LinearLayout mainLayout = new LinearLayout(getContext());
+		mainLayout.setOrientation(LinearLayout.VERTICAL);
+		mainLayout.addView(scoreLayout);
+		mainLayout.addView(finLayout);
+		alert.setView(mainLayout);
 
 		alert.setPositiveButton("Ok", getSaveMatchListener(v, r, scoreTextVIew, cat, setp, setc, finMatch));
 
@@ -307,8 +319,9 @@ public class RencontreAdapter extends ArrayAdapter<Rencontre> {
 				String setcChamps = "setc" + cat.name().toLowerCase(Locale.getDefault());
 				String finMatchChamps = "fin" + cat.name().toLowerCase(Locale.getDefault());
 
-				Intent updateResultatsIntent = RencontreService.getInstance(v.getContext()).getUpdateResultatsIntent(r.getNumequipe(), r.getJournee(),
-						setpChamps, setPvalue, setcChamps, setCvalue, finMatchChamps, finMatchvalue, new ResultReceiver(new Handler()) {
+				Intent updateResultatsIntent = RencontreService.getInstance(v.getContext()).getUpdateResultatsIntent(r.getNumequipe(),
+						r.getJournee(), setpChamps, setPvalue, setcChamps, setCvalue, finMatchChamps, finMatchvalue,
+						new ResultReceiver(new Handler()) {
 
 							@Override
 							protected void onReceiveResult(int resultCode, Bundle resultData) {
@@ -320,7 +333,9 @@ public class RencontreAdapter extends ArrayAdapter<Rencontre> {
 										setSetpMethod.invoke(r, Integer.parseInt(setPvalue));
 										Method setSetcMethod = c.getDeclaredMethod("setSetc" + cat.name().toLowerCase(Locale.getDefault()), int.class);
 										setSetcMethod.invoke(r, Integer.parseInt(setCvalue));
-										
+										Method setFinMatchMethod = c.getDeclaredMethod("setFin" + cat.name().toLowerCase(Locale.getDefault()), String.class);
+										setFinMatchMethod.invoke(r, finMatchvalue);
+
 										scoreTextVIew.setText(setPvalue + " / " + setCvalue);
 										Toast.makeText(v.getContext(), "Valeur sauvée", Toast.LENGTH_SHORT).show();
 									} catch (Exception e) {
@@ -339,7 +354,8 @@ public class RencontreAdapter extends ArrayAdapter<Rencontre> {
 
 	public Spinner getSpinnerScore(View v) {
 		final Spinner editText = new Spinner(v.getContext());
-		ArrayAdapter<Integer> scoreAdapter = new ArrayAdapter<Integer>(getContext(), android.R.layout.simple_spinner_dropdown_item, Arrays.asList(0, 1, 2));
+		ArrayAdapter<Integer> scoreAdapter = new ArrayAdapter<Integer>(getContext(), android.R.layout.simple_spinner_dropdown_item, Arrays.asList(0,
+				1, 2));
 		editText.setAdapter(scoreAdapter);
 		return editText;
 	}

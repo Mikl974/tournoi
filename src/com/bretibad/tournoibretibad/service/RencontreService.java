@@ -54,6 +54,8 @@ public class RencontreService {
 		params.putString("valueSetp", valueSetp);
 		params.putString("champsSetc", champsSetc);
 		params.putString("valueSetc", valueSetc);
+		params.putString("finMatchChamps", finMatchChamps);
+		params.putString("valueFinMatch", valueFinMatch);
 
 		intent.putExtra(RESTService.EXTRA_HTTP_VERB, RESTService.POST);
 		intent.putExtra(RESTService.EXTRA_PARAMS, params);
