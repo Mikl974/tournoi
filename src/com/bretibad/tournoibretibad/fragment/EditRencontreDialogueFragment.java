@@ -246,6 +246,7 @@ public class EditRencontreDialogueFragment extends DialogFragment {
 					initSpinner(sh3List, joueurTxt, cat.name(), ll, rencontre.getSh3());
 				} else {
 					sh3Panel.setVisibility(View.GONE);
+					sh3List=null;
 				}
 
 				break;
@@ -258,6 +259,7 @@ public class EditRencontreDialogueFragment extends DialogFragment {
 					initSpinner(sd2List, joueurTxt, cat.name(), ll, rencontre.getSd2());
 				} else {
 					sd2Panel.setVisibility(View.GONE);
+					sd2List=null;
 				}
 				break;
 			case DH1:
@@ -275,6 +277,8 @@ public class EditRencontreDialogueFragment extends DialogFragment {
 					initDoubleSpinner(dx2J1List, dx2J2List, joueurTxt, cat.name(), ll, rencontre.getDx2());
 				} else {
 					dx2Panel.setVisibility(View.GONE);
+					dx2J1List=null;
+					dx2J1List=null;
 				}
 				break;
 			default:
