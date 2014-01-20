@@ -95,13 +95,7 @@ public class EditRencontreDialogueFragment extends DialogFragment {
 					}.getType();
 					Gson gson = new Gson();
 					List<Joueur> joueurs = gson.fromJson(result, joueurType);
-					List<String> joueurTxt = new ArrayList<String>();
-					joueurTxt.add("");
-					for (Joueur j : joueurs) {
-						joueurTxt.add(j.getPrenom() + " " + j.getNom());
-					}
-
-					fillEditRencontrePopup(builder, joueurTxt);
+					fillEditRencontrePopup(builder, joueurs);
 					getActivity().setProgressBarIndeterminateVisibility(false);
 
 				} else {
@@ -164,8 +158,8 @@ public class EditRencontreDialogueFragment extends DialogFragment {
 		rencontre.setLive(live.isChecked() ? 1 : 0);
 		rencontre.setFinmatch(fin.isChecked() ? "OK" : "");
 
-		String scorepValue = (String)scorep.getSelectedItem();
-		String scorecValue = (String)scorec.getSelectedItem();
+		String scorepValue = (String) scorep.getSelectedItem();
+		String scorecValue = (String) scorec.getSelectedItem();
 		rencontre.setMatchpour(scorepValue != null && !scorepValue.isEmpty() ? Integer.parseInt(scorepValue) : null);
 		rencontre.setMatchcontre(scorecValue != null && !scorecValue.isEmpty() ? Integer.parseInt(scorecValue) : null);
 
@@ -220,7 +214,21 @@ public class EditRencontreDialogueFragment extends DialogFragment {
 
 	}
 
-	protected void fillEditRencontrePopup(Builder alert, List<String> joueurTxt) {
+	protected void fillEditRencontrePopup(Builder alert, List<Joueur> joueursList) {
+		List<String> allJoueur = new ArrayList<String>();
+		List<String> hommeList = new ArrayList<String>();
+		List<String> femmeList = new ArrayList<String>();
+		allJoueur.add("");
+		hommeList.add("");
+		femmeList.add("");
+		for (Joueur j : joueursList) {
+			allJoueur.add(j.getFullName());
+			if (j.getGenre().toLowerCase().equals("m")) {
+				hommeList.add(j.getFullName());
+			} else if (j.getGenre().toLowerCase().equals("f")) {
+				femmeList.add(j.getFullName());
+			}
+		}
 
 		title.setText("J" + rencontre.getJournee() + " - Equipe" + rencontre.getNumequipe() + " / " + rencontre.getAdversaire());
 
@@ -233,15 +241,15 @@ public class EditRencontreDialogueFragment extends DialogFragment {
 
 			switch (cat) {
 			case SH1:
-				initSpinner(sh1List, joueurTxt, cat.name(), ll, rencontre.getSh1());
+				initSpinner(sh1List, hommeList, cat.name(), ll, rencontre.getSh1());
 				break;
 			case SH2:
-				initSpinner(sh2List, joueurTxt, cat.name(), ll, rencontre.getSh2());
+				initSpinner(sh2List, hommeList, cat.name(), ll, rencontre.getSh2());
 				break;
 			case SH3:
 				if (!rencontre.getDivision().equals("Reg3")) {
 					sh3Panel.setVisibility(View.VISIBLE);
-					initSpinner(sh3List, joueurTxt, cat.name(), ll, rencontre.getSh3());
+					initSpinner(sh3List, hommeList, cat.name(), ll, rencontre.getSh3());
 				} else {
 					sh3Panel.setVisibility(View.GONE);
 					sh3List = null;
@@ -249,30 +257,30 @@ public class EditRencontreDialogueFragment extends DialogFragment {
 
 				break;
 			case SD1:
-				initSpinner(sd1List, joueurTxt, cat.name(), ll, rencontre.getSd1());
+				initSpinner(sd1List, femmeList, cat.name(), ll, rencontre.getSd1());
 				break;
 			case SD2:
 				if (rencontre.getDivision().equals("Reg3")) {
 					sd2Panel.setVisibility(View.VISIBLE);
-					initSpinner(sd2List, joueurTxt, cat.name(), ll, rencontre.getSd2());
+					initSpinner(sd2List, femmeList, cat.name(), ll, rencontre.getSd2());
 				} else {
 					sd2Panel.setVisibility(View.GONE);
 					sd2List = null;
 				}
 				break;
 			case DH1:
-				initDoubleSpinner(dh1J1List, dh1J2List, joueurTxt, cat.name(), ll, rencontre.getDh1());
+				initDoubleSpinner(dh1J1List, dh1J2List, hommeList, hommeList, cat.name(), ll, rencontre.getDh1());
 				break;
 			case DD1:
-				initDoubleSpinner(dd1J1List, dd1J2List, joueurTxt, cat.name(), ll, rencontre.getDd1());
+				initDoubleSpinner(dd1J1List, dd1J2List, femmeList, femmeList, cat.name(), ll, rencontre.getDd1());
 				break;
 			case DX1:
-				initDoubleSpinner(dx1J1List, dx1J2List, joueurTxt, cat.name(), ll, rencontre.getDx1());
+				initDoubleSpinner(dx1J1List, dx1J2List, hommeList, femmeList, cat.name(), ll, rencontre.getDx1());
 				break;
 			case DX2:
 				if (rencontre.getDivision().equals("Reg3")) {
 					dx2Panel.setVisibility(View.VISIBLE);
-					initDoubleSpinner(dx2J1List, dx2J2List, joueurTxt, cat.name(), ll, rencontre.getDx2());
+					initDoubleSpinner(dx2J1List, dx2J2List, hommeList, femmeList, cat.name(), ll, rencontre.getDx2());
 				} else {
 					dx2Panel.setVisibility(View.GONE);
 					dx2J1List = null;
@@ -287,8 +295,8 @@ public class EditRencontreDialogueFragment extends DialogFragment {
 	}
 
 	private void initScore() {
-		ArrayAdapter<String> scoreAdapter = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_spinner_item, Arrays.asList("", "0", "1",
-				"2", "3", "4", "5", "6", "7", "8"));
+		ArrayAdapter<String> scoreAdapter = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_spinner_item, Arrays.asList("", "0", "1", "2", "3",
+				"4", "5", "6", "7", "8"));
 		scorep.setAdapter(scoreAdapter);
 		scorec.setAdapter(scoreAdapter);
 
@@ -315,10 +323,11 @@ public class EditRencontreDialogueFragment extends DialogFragment {
 		}
 	}
 
-	private void initDoubleSpinner(Spinner spinner1, Spinner spinner2, List<String> joueurTxt, String cat, LinearLayout ll, String selectedValueDouble) {
+	private void initDoubleSpinner(Spinner spinner1, Spinner spinner2, List<String> joueurSpinner1Txt, List<String> joueurSpinner2Txt, String cat,
+			LinearLayout ll, String selectedValueDouble) {
 
-		ArrayAdapter<String> adapter1 = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_spinner_item, joueurTxt);
-		ArrayAdapter<String> adapter2 = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_spinner_item, joueurTxt);
+		ArrayAdapter<String> adapter1 = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_spinner_item, joueurSpinner1Txt);
+		ArrayAdapter<String> adapter2 = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_spinner_item, joueurSpinner2Txt);
 
 		spinner1.setAdapter(adapter1);
 		spinner2.setAdapter(adapter2);

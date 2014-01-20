@@ -14,6 +14,7 @@ public class Joueur implements Parcelable {
 	private String nom;
 	private String prenom;
 	private String licence;
+	private String genre;
 	private int paye;
 
 	public Joueur() {
@@ -55,11 +56,24 @@ public class Joueur implements Parcelable {
 		this.paye = paye;
 	}
 
+	public String getGenre() {
+		return genre;
+	}
+
+	public void setGenre(String genre) {
+		this.genre = genre;
+	}
+
+	public String getFullName() {
+		return prenom + " " + nom;
+	}
+
 	public static Joueur fromJson(JSONObject jsonJoueur) {
 		try {
 			Joueur j = new Joueur();
 			j.setNom(jsonJoueur.getString("nom"));
 			j.setPrenom(jsonJoueur.getString("prenom"));
+			j.setGenre(jsonJoueur.getString("genre"));
 			j.setLicence(jsonJoueur.getString("licence"));
 			j.setPaye(jsonJoueur.getInt("paye"));
 			return j;
@@ -91,6 +105,7 @@ public class Joueur implements Parcelable {
 	public void writeToParcel(Parcel dest, int flags) {
 		dest.writeString(nom);
 		dest.writeString(prenom);
+		dest.writeString(genre);
 		dest.writeString(licence);
 		dest.writeInt(paye);
 	}
@@ -98,6 +113,7 @@ public class Joueur implements Parcelable {
 	private void readFromParcel(Parcel in) {
 		nom = in.readString();
 		prenom = in.readString();
+		genre = in.readString();
 		licence = in.readString();
 		paye = in.readInt();
 
