@@ -167,6 +167,10 @@ public class RencontreAdapter extends ArrayAdapter<Rencontre> {
 			} else if (setpValue < setcValue) {
 				scorePanel.setTextColor(getContext().getResources().getColor(R.color.red));
 			}
+		} else if (finMatch != null && (finMatch.equalsIgnoreCase("wop") || finMatch.equalsIgnoreCase("abp"))) {
+			scorePanel.setTextColor(getContext().getResources().getColor(R.color.green));
+		} else if (finMatch != null && (finMatch.equalsIgnoreCase("woc") || finMatch.equalsIgnoreCase("abc"))) {
+			scorePanel.setTextColor(getContext().getResources().getColor(R.color.red));
 		}
 	}
 
@@ -259,9 +263,8 @@ public class RencontreAdapter extends ArrayAdapter<Rencontre> {
 				String setcChamps = "setc" + cat.name().toLowerCase(Locale.getDefault());
 				String finMatchChamps = "fin" + cat.name().toLowerCase(Locale.getDefault());
 
-				Intent updateResultatsIntent = RencontreService.getInstance(v.getContext()).getUpdateResultatsIntent(r.getNumequipe(),
-						r.getJournee(), setpChamps, setPvalue, setcChamps, setCvalue, finMatchChamps, finMatchvalue,
-						new ResultReceiver(new Handler()) {
+				Intent updateResultatsIntent = RencontreService.getInstance(v.getContext()).getUpdateResultatsIntent(r.getNumequipe(), r.getJournee(),
+						setpChamps, setPvalue, setcChamps, setCvalue, finMatchChamps, finMatchvalue, new ResultReceiver(new Handler()) {
 
 							@Override
 							protected void onReceiveResult(int resultCode, Bundle resultData) {
@@ -274,8 +277,7 @@ public class RencontreAdapter extends ArrayAdapter<Rencontre> {
 										setSetpMethod.invoke(r, Integer.parseInt(setPvalue));
 										Method setSetcMethod = c.getDeclaredMethod("setSetc" + cat.name().toLowerCase(Locale.getDefault()), int.class);
 										setSetcMethod.invoke(r, Integer.parseInt(setCvalue));
-										Method setFinMatchMethod = c.getDeclaredMethod("setFin" + cat.name().toLowerCase(Locale.getDefault()),
-												String.class);
+										Method setFinMatchMethod = c.getDeclaredMethod("setFin" + cat.name().toLowerCase(Locale.getDefault()), String.class);
 										setFinMatchMethod.invoke(r, finMatchvalue);
 
 										updateScorePanel(scoreTextVIew, setp.getSelectedItemPosition(), setc.getSelectedItemPosition(), finMatchvalue);
@@ -297,8 +299,7 @@ public class RencontreAdapter extends ArrayAdapter<Rencontre> {
 
 	public Spinner getSpinnerScore(View v) {
 		final Spinner editText = new Spinner(v.getContext());
-		ArrayAdapter<Integer> scoreAdapter = new ArrayAdapter<Integer>(getContext(), android.R.layout.simple_spinner_item, Arrays.asList(0,
-				1, 2));
+		ArrayAdapter<Integer> scoreAdapter = new ArrayAdapter<Integer>(getContext(), android.R.layout.simple_spinner_item, Arrays.asList(0, 1, 2));
 		editText.setAdapter(scoreAdapter);
 		return editText;
 	}
