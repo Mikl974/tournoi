@@ -20,7 +20,8 @@
             android:paddingRight="25sp"
             android:textColor="@color/darkerGrey"
             android:textSize="18sp"
-            android:textStyle="italic" />
+            android:textStyle="italic" 
+            style="?android:attr/listSeparatorTextViewStyle"/>
 
         <TextView
             android:id="@+id/rencontre_score"

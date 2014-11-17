@@ -4,7 +4,10 @@ import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
 
+import android.R.integer;
+import android.app.Activity;
 import android.content.Intent;
+import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
@@ -18,16 +21,19 @@ import android.widget.ListView;
 import android.widget.Spinner;
 import android.widget.Toast;
 
+import com.bretibad.tournoibretibad.MainActivity;
 import com.bretibad.tournoibretibad.R;
 import com.bretibad.tournoibretibad.adpter.RencontreAdapter;
+import com.bretibad.tournoibretibad.model.Equipe;
 import com.bretibad.tournoibretibad.model.Rencontre;
+import com.bretibad.tournoibretibad.model.Tournoi;
 import com.bretibad.tournoibretibad.service.RencontreService;
+import com.bretibad.tournoibretibad.service.TournoiService;
 import com.bretibad.tournoibretibad.utils.RestResultReceiver;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
-@Deprecated // Ancien fragment avec equipe statique
-public class EquipeFragment extends Fragment {
+public class EquipeResponderFragment extends RESTResponderFragment {
 
 	Spinner equipeSpinner;
 	Spinner journeeSpinner;
@@ -35,8 +41,34 @@ public class EquipeFragment extends Fragment {
 	RencontreAdapter rencontreAdapter;
 	int currentEquipe = 0;
 	int currentJournee = 0;
-
+	List<Equipe> mEquipes;
+	ArrayAdapter<String> equipeAdapter;
 	RencontreEquipeResponderFragment rencontreEquipeFragment;
+
+	@Override
+	public void onActivityCreated(Bundle savedInstanceState) {
+		super.onActivityCreated(savedInstanceState);
+		setEquipes();
+	}
+
+	private void setEquipes() {
+
+		MainActivity activity = (MainActivity) getActivity();
+
+		if (mEquipes == null && activity != null) {
+			Intent equipeIntent = TournoiService.getInstance(activity).getEquipeIntent(getResultReceiver());
+			activity.startService(equipeIntent);
+		} else if (activity != null) {
+			equipeAdapter.clear();
+			for (Equipe t : mEquipes) {
+				equipeAdapter.add("Equipe " + t.getNum() + " - " + t.getDivision());
+			}
+
+			activity.setProgressBarIndeterminateVisibility(false);
+			// Notify PullToRefreshLayout that the refresh has finished
+		}
+
+	}
 
 	@Override
 	public void onSaveInstanceState(Bundle outState) {
@@ -44,7 +76,7 @@ public class EquipeFragment extends Fragment {
 		outState.putInt("currentJournee", currentJournee);
 		super.onSaveInstanceState(outState);
 	}
-	
+
 	@Override
 	public void onResume() {
 		super.onResume();
@@ -64,9 +96,8 @@ public class EquipeFragment extends Fragment {
 
 		// Create an ArrayAdapter using the string array and a default spinner
 		// layout
-		ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(v.getContext(), R.array.equipes, android.R.layout.simple_list_item_activated_1);
-		// Apply the adapter to the spinner
-		equipeSpinner.setAdapter(adapter);
+		equipeAdapter = new ArrayAdapter<String>(v.getContext(), android.R.layout.simple_spinner_item, new ArrayList<String>());
+		equipeSpinner.setAdapter(equipeAdapter);
 
 		currentEquipe = savedInstanceState != null ? savedInstanceState.getInt("currentEquipe", 0) : 0;
 		currentJournee = savedInstanceState != null ? savedInstanceState.getInt("currentJournee", 0) : 0;
@@ -115,8 +146,12 @@ public class EquipeFragment extends Fragment {
 					Gson gson = new Gson();
 					List<Rencontre> rencontres = gson.fromJson(result, journeeType);
 					List<String> journees = new ArrayList<String>();
-					for (Rencontre rencontre : rencontres) {
-						journees.add("J" + rencontre.getJournee());
+					if (rencontres != null) {
+						for (Rencontre rencontre : rencontres) {
+							journees.add("J" + rencontre.getJournee());
+						}
+					} else {
+						rencontreAdapter.clear();
 					}
 					ArrayAdapter<String> journeeAdapter = new ArrayAdapter<String>(currentActivity, android.R.layout.simple_spinner_item, journees);
 					journeeSpinner.setVisibility(View.VISIBLE);
@@ -124,8 +159,8 @@ public class EquipeFragment extends Fragment {
 					journeeSpinner.setSelection(currentJournee);
 
 				} else {
-					Toast.makeText(currentActivity, "Impossible de charger la liste des journées. Verifier votre connexion internet.", Toast.LENGTH_SHORT)
-							.show();
+					Toast.makeText(currentActivity, "Impossible de charger la liste des journées. Verifier votre connexion internet.",
+							Toast.LENGTH_SHORT).show();
 				}
 				currentActivity.setProgressBarIndeterminateVisibility(false);
 
@@ -152,8 +187,8 @@ public class EquipeFragment extends Fragment {
 					}
 
 				} else {
-					Toast.makeText(currentActivity, "Impossible de charger la liste des rencontres. Verifier votre connexion internet.", Toast.LENGTH_SHORT)
-							.show();
+					Toast.makeText(currentActivity, "Impossible de charger la liste des rencontres. Verifier votre connexion internet.",
+							Toast.LENGTH_SHORT).show();
 				}
 				currentActivity.setProgressBarIndeterminateVisibility(false);
 			}
@@ -164,5 +199,23 @@ public class EquipeFragment extends Fragment {
 
 	public void refreshRencontre(int equipe, int journee) {
 		refreshRencontre(journee - 1);
+	}
+
+	@Override
+	public void onRESTResult(int code, String result) {
+		if (code == 200 && result != null) {
+			Type equipeType = new TypeToken<List<Equipe>>() {
+			}.getType();
+			Gson gson = new Gson();
+			List<Equipe> equipes = gson.fromJson(result, equipeType);
+
+			mEquipes = equipes;
+			setEquipes();
+		} else {
+			Activity activity = getActivity();
+			if (activity != null) {
+				Toast.makeText(activity, "Impossible de charger la liste des equipes. Verifier votre connexion internet.", Toast.LENGTH_SHORT).show();
+			}
+		}
 	}
 }

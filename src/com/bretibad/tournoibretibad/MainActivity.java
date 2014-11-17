@@ -19,6 +19,7 @@ import android.widget.ListView;
 
 import com.bretibad.tournoibretibad.fragment.EditRencontreDialogueFragment.NoticeEditRencontreDialogListener;
 import com.bretibad.tournoibretibad.fragment.EquipeFragment;
+import com.bretibad.tournoibretibad.fragment.EquipeResponderFragment;
 import com.bretibad.tournoibretibad.fragment.JoueursResponderFragment;
 import com.bretibad.tournoibretibad.fragment.RencontreResponderFragment;
 import com.bretibad.tournoibretibad.fragment.TournoisResponderFragment;
@@ -32,7 +33,7 @@ public class MainActivity extends FragmentActivity implements NoticeEditRencontr
 
 	TournoisResponderFragment tournoiListFragment;
 	RencontreResponderFragment rencontreFragment;
-	EquipeFragment equipeFragment;
+	EquipeResponderFragment equipeFragment;
 
 	private DrawerLayout mDrawerLayout;
 	private ListView mDrawerList;
@@ -119,7 +120,7 @@ public class MainActivity extends FragmentActivity implements NoticeEditRencontr
 
 		mDrawerToggle = new ActionBarDrawerToggle(this, /* host Activity */
 		mDrawerLayout, /* DrawerLayout object */
-		R.drawable.ic_drawer, /* nav drawer icon to replace 'Up' caret */
+		R.drawable.bretibad_ic_navigation_drawer, /* nav drawer icon to replace 'Up' caret */
 		R.string.drawer_open, /* "open drawer" description */
 		R.string.drawer_close /* "close drawer" description */
 		) {
@@ -186,9 +187,9 @@ public class MainActivity extends FragmentActivity implements NoticeEditRencontr
 
 			break;
 		case 2:
-			equipeFragment = (EquipeFragment) fm.findFragmentByTag("equipeFragment");
+			equipeFragment = (EquipeResponderFragment) fm.findFragmentByTag("equipeFragment");
 			if (equipeFragment == null) {
-				equipeFragment = new EquipeFragment();
+				equipeFragment = new EquipeResponderFragment();
 			}
 			ft.replace(R.id.fragment_content, equipeFragment, "equipeFragment");
 			ft.addToBackStack(null);
@@ -209,7 +210,7 @@ public class MainActivity extends FragmentActivity implements NoticeEditRencontr
 	public void onEditRencontreDialogPositiveClick(DialogFragment dialog, int equipe, int journee) {
 		FragmentManager fm = getSupportFragmentManager();
 
-		equipeFragment = (EquipeFragment) fm.findFragmentByTag("equipeFragment");
+		equipeFragment = (EquipeResponderFragment) fm.findFragmentByTag("equipeFragment");
 		if (equipeFragment != null) {
 			equipeFragment.refreshRencontre(equipe,journee);
 		}

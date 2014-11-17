@@ -101,7 +101,18 @@ public class TournoiService {
 		} catch (Exception e) {
 			Log.e("Error", "Error" + e.getMessage());
 		}
+	}
+	
+	public Intent getEquipeIntent(ResultReceiver receiver) {
+		Intent intent = new Intent(context, RESTService.class);
+		intent.setData(Uri.parse(baseUrl + config.getProperty("listEquipe")));
 
+		Bundle params = new Bundle();
+		params.putString("q", "android");
+
+		intent.putExtra(RESTService.EXTRA_PARAMS, params);
+		intent.putExtra(RESTService.EXTRA_RESULT_RECEIVER, receiver);
+		return intent;
 	}
 
 	private List<NameValuePair> getPostParam(String tournoi, List<Joueur> joueurs) {
