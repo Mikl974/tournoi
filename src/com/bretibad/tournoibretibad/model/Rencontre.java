@@ -21,6 +21,10 @@ public class Rencontre implements Parcelable {
 	private int setpsh3;
 	private int setcsh3;
 	private String finsh3;
+	private String sh4;
+	private int setpsh4;
+	private int setcsh4;
+	private String finsh4;
 	private String sd1;
 	private int setpsd1;
 	private int setcsd1;
@@ -33,6 +37,10 @@ public class Rencontre implements Parcelable {
 	private int setpdh1;
 	private int setcdh1;
 	private String findh1;
+	private String dh2;
+	private int setpdh2;
+	private int setcdh2;
+	private String findh2;
 	private String dd1;
 	private int setpdd1;
 	private int setcdd1;
@@ -49,6 +57,11 @@ public class Rencontre implements Parcelable {
 	private Integer matchpour;
 	private Integer matchcontre;
 	private String finmatch;
+	private int sh;
+	private int sd;
+	private int dh;
+	private int dd;
+	private int dx;
 
 	public Rencontre(Parcel in) {
 		numequipe = in.readInt();
@@ -69,6 +82,11 @@ public class Rencontre implements Parcelable {
 		setpsh3 = in.readInt();
 		setcsh3 = in.readInt();
 		finsh3 = in.readString();
+		
+		sh4 = in.readString();
+		setpsh4 = in.readInt();
+		setcsh4 = in.readInt();
+		finsh4 = in.readString();
 
 		sd1 = in.readString();
 		setpsd1 = in.readInt();
@@ -84,6 +102,11 @@ public class Rencontre implements Parcelable {
 		setpdh1 = in.readInt();
 		setcdh1 = in.readInt();
 		findh1 = in.readString();
+		
+		dh2 = in.readString();
+		setpdh2 = in.readInt();
+		setcdh2 = in.readInt();
+		findh2 = in.readString();
 
 		dd1 = in.readString();
 		setpdd1 = in.readInt();
@@ -133,6 +156,10 @@ public class Rencontre implements Parcelable {
 		dest.writeInt(setpsh3);
 		dest.writeInt(setcsh3);
 		dest.writeString(finsh3);
+		dest.writeString(sh4);
+		dest.writeInt(setpsh4);
+		dest.writeInt(setcsh4);
+		dest.writeString(finsh4);
 		dest.writeString(sd1);
 		dest.writeInt(setpsd1);
 		dest.writeInt(setcsd1);
@@ -145,6 +172,10 @@ public class Rencontre implements Parcelable {
 		dest.writeInt(setpdh1);
 		dest.writeInt(setcdh1);
 		dest.writeString(findh1);
+		dest.writeString(dh2);
+		dest.writeInt(setpdh2);
+		dest.writeInt(setcdh2);
+		dest.writeString(findh2);
 		dest.writeString(dd1);
 		dest.writeInt(setpdd1);
 		dest.writeInt(setcdd1);
@@ -554,5 +585,109 @@ public class Rencontre implements Parcelable {
 
 	public void setFindx2(String findx2) {
 		this.findx2 = findx2;
+	}
+
+	public int getSh() {
+		return sh;
+	}
+
+	public void setSh(int sh) {
+		this.sh = sh;
+	}
+
+	public int getSd() {
+		return sd;
+	}
+
+	public void setSd(int sd) {
+		this.sd = sd;
+	}
+
+	public int getDh() {
+		return dh;
+	}
+
+	public void setDh(int dh) {
+		this.dh = dh;
+	}
+
+	public int getDd() {
+		return dd;
+	}
+
+	public void setDd(int dd) {
+		this.dd = dd;
+	}
+
+	public int getDx() {
+		return dx;
+	}
+
+	public void setDx(int dx) {
+		this.dx = dx;
+	}
+
+	public String getSh4() {
+		return sh4;
+	}
+
+	public void setSh4(String sh4) {
+		this.sh4 = sh4;
+	}
+
+	public int getSetpsh4() {
+		return setpsh4;
+	}
+
+	public void setSetpsh4(int setpsh4) {
+		this.setpsh4 = setpsh4;
+	}
+
+	public int getSetcsh4() {
+		return setcsh4;
+	}
+
+	public void setSetcsh4(int setcsh4) {
+		this.setcsh4 = setcsh4;
+	}
+
+	public String getFinsh4() {
+		return finsh4;
+	}
+
+	public void setFinsh4(String finsh4) {
+		this.finsh4 = finsh4;
+	}
+
+	public String getDh2() {
+		return dh2;
+	}
+
+	public void setDh2(String dh2) {
+		this.dh2 = dh2;
+	}
+
+	public int getSetpdh2() {
+		return setpdh2;
+	}
+
+	public void setSetpdh2(int setpdh2) {
+		this.setpdh2 = setpdh2;
+	}
+
+	public int getSetcdh2() {
+		return setcdh2;
+	}
+
+	public void setSetcdh2(int setcdh2) {
+		this.setcdh2 = setcdh2;
+	}
+
+	public String getFindh2() {
+		return findh2;
+	}
+
+	public void setFindh2(String findh2) {
+		this.findh2 = findh2;
 	}
 }

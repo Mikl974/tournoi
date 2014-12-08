@@ -36,8 +36,9 @@ public class EditRencontreDialogueFragment extends DialogFragment {
 	AlertDialog.Builder builder;
 	private Rencontre rencontre;
 
-	Spinner sh1List, sh2List, sh3List, sd1List, sd2List, dh1J1List, dh1J2List, dd1J1List, dd1J2List, dx1J1List, dx1J2List, dx2J1List, dx2J2List;
-	LinearLayout sh3Panel, sd2Panel, dx2Panel;
+	Spinner sh1List, sh2List, sh3List, sh4List, sd1List, sd2List, dh1J1List, dh1J2List, dh2J1List, dh2J2List, dd1J1List, dd1J2List, dx1J1List,
+			dx1J2List, dx2J1List, dx2J2List;
+	LinearLayout sh3Panel, sh4Panel, dh1Panel, dh2Panel, sd1Panel, sd2Panel, dd1Panel, dx1Panel, dx2Panel;
 	Spinner scorep, scorec;
 
 	CheckBox fin, live;
@@ -131,18 +132,27 @@ public class EditRencontreDialogueFragment extends DialogFragment {
 		scorec = (Spinner) view.findViewById(R.id.scorec);
 
 		sh3Panel = (LinearLayout) view.findViewById(R.id.sh3Panel);
+		sh4Panel = (LinearLayout) view.findViewById(R.id.sh4Panel);
+		sd1Panel = (LinearLayout) view.findViewById(R.id.sd1Panel);
 		sd2Panel = (LinearLayout) view.findViewById(R.id.sd2Panel);
+		dh1Panel = (LinearLayout) view.findViewById(R.id.dh1Panel);
+		dh2Panel = (LinearLayout) view.findViewById(R.id.dh2Panel);
+		dd1Panel = (LinearLayout) view.findViewById(R.id.dd1Panel);
+		dx1Panel = (LinearLayout) view.findViewById(R.id.dx1Panel);
 		dx2Panel = (LinearLayout) view.findViewById(R.id.dx2Panel);
 
 		sh1List = (Spinner) view.findViewById(R.id.sh1List);
 		sh2List = (Spinner) view.findViewById(R.id.sh2List);
 		sh3List = (Spinner) view.findViewById(R.id.sh3List);
+		sh4List = (Spinner) view.findViewById(R.id.sh4List);
 
 		sd1List = (Spinner) view.findViewById(R.id.sd1List);
 		sd2List = (Spinner) view.findViewById(R.id.sd2List);
 
 		dh1J1List = (Spinner) view.findViewById(R.id.dh1J1List);
 		dh1J2List = (Spinner) view.findViewById(R.id.dh1J2List);
+		dh2J1List = (Spinner) view.findViewById(R.id.dh2J1List);
+		dh2J2List = (Spinner) view.findViewById(R.id.dh2J2List);
 
 		dd1J1List = (Spinner) view.findViewById(R.id.dd1J1List);
 		dd1J2List = (Spinner) view.findViewById(R.id.dd1J2List);
@@ -247,7 +257,7 @@ public class EditRencontreDialogueFragment extends DialogFragment {
 				initSpinner(sh2List, hommeList, cat.name(), ll, rencontre.getSh2());
 				break;
 			case SH3:
-				if (!rencontre.getDivision().equals("Reg3")) {
+				if (rencontre.getSh() >= 3) {
 					sh3Panel.setVisibility(View.VISIBLE);
 					initSpinner(sh3List, hommeList, cat.name(), ll, rencontre.getSh3());
 				} else {
@@ -256,11 +266,27 @@ public class EditRencontreDialogueFragment extends DialogFragment {
 				}
 
 				break;
+			case SH4:
+				if (rencontre.getSh() >= 4) {
+					sh4Panel.setVisibility(View.VISIBLE);
+					initSpinner(sh4List, hommeList, cat.name(), ll, rencontre.getSh4());
+				} else {
+					sh4Panel.setVisibility(View.GONE);
+					sh4List = null;
+				}
+
+				break;
 			case SD1:
-				initSpinner(sd1List, femmeList, cat.name(), ll, rencontre.getSd1());
+				if (rencontre.getSd() >= 1) {
+					sd1Panel.setVisibility(View.VISIBLE);
+					initSpinner(sd1List, femmeList, cat.name(), ll, rencontre.getSd1());
+				} else {
+					sd1Panel.setVisibility(View.GONE);
+					sd1List = null;
+				}
 				break;
 			case SD2:
-				if (rencontre.getDivision().equals("Reg3")) {
+				if (rencontre.getSd() >= 2) {
 					sd2Panel.setVisibility(View.VISIBLE);
 					initSpinner(sd2List, femmeList, cat.name(), ll, rencontre.getSd2());
 				} else {
@@ -269,22 +295,53 @@ public class EditRencontreDialogueFragment extends DialogFragment {
 				}
 				break;
 			case DH1:
-				initDoubleSpinner(dh1J1List, dh1J2List, hommeList, hommeList, cat.name(), ll, rencontre.getDh1());
+				if (rencontre.getDh() >= 1) {
+					dh1Panel.setVisibility(View.VISIBLE);
+					initDoubleSpinner(dh1J1List, dh1J2List, hommeList, hommeList, cat.name(), ll, rencontre.getDh1());
+				} else {
+					dh1Panel.setVisibility(View.GONE);
+					dh1J1List = null;
+					dh1J2List = null;
+				}
+				break;
+			case DH2:
+				if (rencontre.getDh() >= 2) {
+					dh2Panel.setVisibility(View.VISIBLE);
+					initDoubleSpinner(dh2J1List, dh2J2List, hommeList, hommeList, cat.name(), ll, rencontre.getDh2());
+				} else {
+					dh2Panel.setVisibility(View.GONE);
+					dh2J1List = null;
+					dh2J2List = null;
+				}
 				break;
 			case DD1:
-				initDoubleSpinner(dd1J1List, dd1J2List, femmeList, femmeList, cat.name(), ll, rencontre.getDd1());
+				if (rencontre.getDd() >= 1) {
+					dd1Panel.setVisibility(View.VISIBLE);
+					initDoubleSpinner(dd1J1List, dd1J2List, femmeList, femmeList, cat.name(), ll, rencontre.getDd1());
+				} else {
+					dd1Panel.setVisibility(View.GONE);
+					dd1J1List = null;
+					dd1J2List = null;
+				}
 				break;
 			case DX1:
-				initDoubleSpinner(dx1J1List, dx1J2List, hommeList, femmeList, cat.name(), ll, rencontre.getDx1());
+				if (rencontre.getDx() >= 1) {
+					dx1Panel.setVisibility(View.VISIBLE);
+					initDoubleSpinner(dx1J1List, dx1J2List, hommeList, femmeList, cat.name(), ll, rencontre.getDx1());
+				} else {
+					dx1Panel.setVisibility(View.GONE);
+					dx1J1List = null;
+					dx1J2List = null;
+				}
 				break;
 			case DX2:
-				if (rencontre.getDivision().equals("Reg3")) {
+				if (rencontre.getDx() >= 2) {
 					dx2Panel.setVisibility(View.VISIBLE);
 					initDoubleSpinner(dx2J1List, dx2J2List, hommeList, femmeList, cat.name(), ll, rencontre.getDx2());
 				} else {
 					dx2Panel.setVisibility(View.GONE);
 					dx2J1List = null;
-					dx2J1List = null;
+					dx2J2List = null;
 				}
 				break;
 			default:
@@ -295,13 +352,13 @@ public class EditRencontreDialogueFragment extends DialogFragment {
 	}
 
 	private void initScore() {
-		ArrayAdapter<String> scoreAdapter = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_spinner_item, Arrays.asList("", "0", "1", "2", "3",
-				"4", "5", "6", "7", "8"));
+		ArrayAdapter<String> scoreAdapter = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_spinner_item, Arrays.asList("", "0", "1",
+				"2", "3", "4", "5", "6", "7", "8"));
 		scorep.setAdapter(scoreAdapter);
 		scorec.setAdapter(scoreAdapter);
 
-		scorep.setSelection(scoreAdapter.getPosition(rencontre.getMatchpour() != null ? (rencontre.getMatchpour() + "") : ""));
-		scorec.setSelection(scoreAdapter.getPosition(rencontre.getMatchcontre() != null ? (rencontre.getMatchcontre() + "") : ""));
+		scorep.setSelection(scoreAdapter.getPosition(rencontre.getMatchpour() != null ? (rencontre.getMatchpour() + "") : "0"));
+		scorec.setSelection(scoreAdapter.getPosition(rencontre.getMatchcontre() != null ? (rencontre.getMatchcontre() + "") : "0"));
 
 		// scorep.setText(rencontre.getMatchpour() != null ?
 		// (rencontre.getMatchpour() + "") : "");

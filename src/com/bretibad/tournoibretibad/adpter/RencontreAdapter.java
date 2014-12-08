@@ -2,6 +2,7 @@ package com.bretibad.tournoibretibad.adpter;
 
 import java.lang.reflect.Method;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 
@@ -82,22 +83,26 @@ public class RencontreAdapter extends ArrayAdapter<Rencontre> {
 		holder.title.setText("Equipe " + r.getNumequipe() + " - " + r.getAdversaire());
 
 		if (r.getFinmatch() != null && r.getFinmatch().equalsIgnoreCase("ok")) {
-			holder.rencontreScore.setText(r.getMatchpour() + " / " + r.getMatchcontre());
+			Integer scorePour = r.getMatchpour() != null ? r.getMatchpour() : 0;
+			Integer scoreContre = r.getMatchcontre() != null ? r.getMatchcontre() : 0;
+			holder.rencontreScore.setText(scorePour + " / " + scoreContre);
 		} else {
 			holder.rencontreScore.setText("");
 		}
 
 		initEditRencontreIcon(holder.editRencontreIcon, r);
 
-		initMatchLine(MatchCategory.SH1, r, holder.sh1Panel, holder.sh1, holder.scoreSh1, true);
-		initMatchLine(MatchCategory.SH2, r, holder.sh2Panel, holder.sh2, holder.scoreSh2, true);
-		initMatchLine(MatchCategory.SH3, r, holder.sh3Panel, holder.sh3, holder.scoreSh3, !r.getDivision().equals("Reg3"));
-		initMatchLine(MatchCategory.SD1, r, holder.sd1Panel, holder.sd1, holder.scoreSd1, true);
-		initMatchLine(MatchCategory.SD2, r, holder.sd2Panel, holder.sd2, holder.scoreSd2, r.getDivision().equals("Reg3"));
-		initMatchLine(MatchCategory.DH1, r, holder.dh1Panel, holder.dh1, holder.scoreDh1, true);
-		initMatchLine(MatchCategory.DD1, r, holder.dd1Panel, holder.dd1, holder.scoreDd1, true);
-		initMatchLine(MatchCategory.DX1, r, holder.dx1Panel, holder.dx1, holder.scoreDx1, true);
-		initMatchLine(MatchCategory.DX2, r, holder.dx2Panel, holder.dx2, holder.scoreDx2, r.getDivision().equals("Reg3"));
+		initMatchLine(MatchCategory.SH1, r, holder.sh1Panel, holder.sh1, holder.scoreSh1, r.getSh() >= 1);
+		initMatchLine(MatchCategory.SH2, r, holder.sh2Panel, holder.sh2, holder.scoreSh2, r.getSh() >= 2);
+		initMatchLine(MatchCategory.SH3, r, holder.sh3Panel, holder.sh3, holder.scoreSh3, r.getSh() >= 3);
+		initMatchLine(MatchCategory.SH4, r, holder.sh4Panel, holder.sh4, holder.scoreSh4, r.getSh() >= 4);
+		initMatchLine(MatchCategory.SD1, r, holder.sd1Panel, holder.sd1, holder.scoreSd1, r.getSd() >= 1);
+		initMatchLine(MatchCategory.SD2, r, holder.sd2Panel, holder.sd2, holder.scoreSd2, r.getSd() >= 2);
+		initMatchLine(MatchCategory.DH1, r, holder.dh1Panel, holder.dh1, holder.scoreDh1, r.getDh() >= 1);
+		initMatchLine(MatchCategory.DH2, r, holder.dh2Panel, holder.dh2, holder.scoreDh2, r.getDh() >= 2);
+		initMatchLine(MatchCategory.DD1, r, holder.dd1Panel, holder.dd1, holder.scoreDd1, r.getDd() >= 1);
+		initMatchLine(MatchCategory.DX1, r, holder.dx1Panel, holder.dx1, holder.scoreDx1, r.getDx() >= 1);
+		initMatchLine(MatchCategory.DX2, r, holder.dx2Panel, holder.dx2, holder.scoreDx2, r.getDx() >= 2);
 
 		return convertView;
 	}
@@ -117,21 +122,21 @@ public class RencontreAdapter extends ArrayAdapter<Rencontre> {
 			boolean displayLine) {
 
 		try {
-			Class<?> c = Class.forName(Rencontre.class.getName());
-			Method getJoueurMethod = c.getDeclaredMethod("get" + StringUtils.toCamelCase(cat.name().toLowerCase(Locale.getDefault())));
-			Method getSetpMethod = c.getDeclaredMethod("getSetp" + cat.name().toLowerCase(Locale.getDefault()));
-			Method getSetcMethod = c.getDeclaredMethod("getSetc" + cat.name().toLowerCase(Locale.getDefault()));
-			Method getFinMatchMethod = c.getDeclaredMethod("getFin" + cat.name().toLowerCase(Locale.getDefault()));
-
-			String joueur = (String) getJoueurMethod.invoke(r);
-			int setpValue = (Integer) getSetpMethod.invoke(r);
-			int setcValue = (Integer) getSetcMethod.invoke(r);
-			String finMatch = (String) getFinMatchMethod.invoke(r);
-			joueurPanel.setText(cat.name() + ": " + joueur);
-
-			updateScorePanel(scorePanel, setpValue, setcValue, finMatch);
-
 			if (displayLine) {
+				Class<?> c = Class.forName(Rencontre.class.getName());
+				Method getJoueurMethod = c.getDeclaredMethod("get" + StringUtils.toCamelCase(cat.name().toLowerCase(Locale.getDefault())));
+				Method getSetpMethod = c.getDeclaredMethod("getSetp" + cat.name().toLowerCase(Locale.getDefault()));
+				Method getSetcMethod = c.getDeclaredMethod("getSetc" + cat.name().toLowerCase(Locale.getDefault()));
+				Method getFinMatchMethod = c.getDeclaredMethod("getFin" + cat.name().toLowerCase(Locale.getDefault()));
+
+				String joueur = (String) getJoueurMethod.invoke(r);
+				int setpValue = (Integer) getSetpMethod.invoke(r);
+				int setcValue = (Integer) getSetcMethod.invoke(r);
+				String finMatch = (String) getFinMatchMethod.invoke(r);
+				joueurPanel.setText(cat.name() + ": " + joueur);
+
+				updateScorePanel(scorePanel, setpValue, setcValue, finMatch);
+
 				mainPanel.setVisibility(View.VISIBLE);
 				if ((r.getFinmatch() == null || !r.getFinmatch().equalsIgnoreCase("OK")) && r.getLive() == 1) {
 					mainPanel.setClickable(true);
@@ -180,8 +185,8 @@ public class RencontreAdapter extends ArrayAdapter<Rencontre> {
 		final Spinner setp = getSpinnerScore(v);
 		final Spinner setc = getSpinnerScore(v);
 
-		ArrayAdapter<String> scoreAdapter = new ArrayAdapter<String>(getContext(), android.R.layout.simple_spinner_item, Arrays.asList("",
-				"OK", "WOP", "WOC", "ABP", "ABC"));
+		ArrayAdapter<String> scoreAdapter = new ArrayAdapter<String>(getContext(), android.R.layout.simple_spinner_item, Arrays.asList("", "OK",
+				"WOP", "WOC", "ABP", "ABC"));
 		final Spinner finMatch = getSpinnerFinMatch(v, scoreAdapter);
 
 		try {
@@ -263,8 +268,9 @@ public class RencontreAdapter extends ArrayAdapter<Rencontre> {
 				String setcChamps = "setc" + cat.name().toLowerCase(Locale.getDefault());
 				String finMatchChamps = "fin" + cat.name().toLowerCase(Locale.getDefault());
 
-				Intent updateResultatsIntent = RencontreService.getInstance(v.getContext()).getUpdateResultatsIntent(r.getNumequipe(), r.getJournee(),
-						setpChamps, setPvalue, setcChamps, setCvalue, finMatchChamps, finMatchvalue, new ResultReceiver(new Handler()) {
+				Intent updateResultatsIntent = RencontreService.getInstance(v.getContext()).getUpdateResultatsIntent(r.getNumequipe(),
+						r.getJournee(), setpChamps, setPvalue, setcChamps, setCvalue, finMatchChamps, finMatchvalue,
+						new ResultReceiver(new Handler()) {
 
 							@Override
 							protected void onReceiveResult(int resultCode, Bundle resultData) {
@@ -277,7 +283,8 @@ public class RencontreAdapter extends ArrayAdapter<Rencontre> {
 										setSetpMethod.invoke(r, Integer.parseInt(setPvalue));
 										Method setSetcMethod = c.getDeclaredMethod("setSetc" + cat.name().toLowerCase(Locale.getDefault()), int.class);
 										setSetcMethod.invoke(r, Integer.parseInt(setCvalue));
-										Method setFinMatchMethod = c.getDeclaredMethod("setFin" + cat.name().toLowerCase(Locale.getDefault()), String.class);
+										Method setFinMatchMethod = c.getDeclaredMethod("setFin" + cat.name().toLowerCase(Locale.getDefault()),
+												String.class);
 										setFinMatchMethod.invoke(r, finMatchvalue);
 
 										updateScorePanel(scoreTextVIew, setp.getSelectedItemPosition(), setc.getSelectedItemPosition(), finMatchvalue);
@@ -327,6 +334,10 @@ public class RencontreAdapter extends ArrayAdapter<Rencontre> {
 		holder.sh3 = (TextView) convertView.findViewById(R.id.sh3);
 		holder.scoreSh3 = (TextView) convertView.findViewById(R.id.scoreSh3);
 
+		holder.sh4Panel = (LinearLayout) convertView.findViewById(R.id.sh4Panel);
+		holder.sh4 = (TextView) convertView.findViewById(R.id.sh4);
+		holder.scoreSh4 = (TextView) convertView.findViewById(R.id.scoreSh4);
+
 		holder.sd1Panel = (LinearLayout) convertView.findViewById(R.id.sd1Panel);
 		holder.sd1 = (TextView) convertView.findViewById(R.id.sd1);
 		holder.scoreSd1 = (TextView) convertView.findViewById(R.id.scoreSd1);
@@ -338,6 +349,10 @@ public class RencontreAdapter extends ArrayAdapter<Rencontre> {
 		holder.dh1Panel = (LinearLayout) convertView.findViewById(R.id.dh1Panel);
 		holder.dh1 = (TextView) convertView.findViewById(R.id.dh1);
 		holder.scoreDh1 = (TextView) convertView.findViewById(R.id.scoreDh1);
+
+		holder.dh2Panel = (LinearLayout) convertView.findViewById(R.id.dh2Panel);
+		holder.dh2 = (TextView) convertView.findViewById(R.id.dh2);
+		holder.scoreDh2 = (TextView) convertView.findViewById(R.id.scoreDh2);
 
 		holder.dd1Panel = (LinearLayout) convertView.findViewById(R.id.dd1Panel);
 		holder.dd1 = (TextView) convertView.findViewById(R.id.dd1);
@@ -370,6 +385,10 @@ public class RencontreAdapter extends ArrayAdapter<Rencontre> {
 		TextView sh3;
 		TextView scoreSh3;
 
+		LinearLayout sh4Panel;
+		TextView sh4;
+		TextView scoreSh4;
+
 		LinearLayout sd1Panel;
 		TextView sd1;
 		TextView scoreSd1;
@@ -381,6 +400,10 @@ public class RencontreAdapter extends ArrayAdapter<Rencontre> {
 		LinearLayout dh1Panel;
 		TextView dh1;
 		TextView scoreDh1;
+
+		LinearLayout dh2Panel;
+		TextView dh2;
+		TextView scoreDh2;
 
 		LinearLayout dd1Panel;
 		TextView dd1;
